@@ -72,8 +72,7 @@ $page = $_GET['page'];
 	<hr class="noscreen" />
 	<div id="footer-null">
 		<div id="footer"><br />
-		Copyright 2008-2015. Baruch Haba Messianic Jewish Congregation, Inc. All rights reserved.<br />
-		Designed by Matthew Coons and maintained by Aaron Eisenberg.<br />
+		Copyright 2017 - Conference Manager - conference management software by Aaron Eisenberg and Sunit Patel<br />
 		</div>
 	</div>
 </div>
