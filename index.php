@@ -38,33 +38,20 @@ $page = $_GET['page'];
 	<div id="right-null">
 		<div id="right">
 			<?php
-
 			if($page) {
 				if(!strpos($page,".")&&!strpos($page,"/")) {
-
 					$path = "inc/".$page.".php";
-
 					if(file_exists($path)) {
-
 						include($path);
-
 					} else {
-
 						echo "Sorry, that page does not exist.<br />";
-
 					}
-
 				} else {
-
 					echo "Not allowed!";
-
 				}
-
 			} else {
-
 				$index = "index";
 				include("inc/".$index.".php");
-
 			}
 			?>
 		</div>
