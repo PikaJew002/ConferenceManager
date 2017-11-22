@@ -1,9 +1,5 @@
 <?php
 $page = $_GET['page'];
-//define('MOBILE_SITE_URL', 'http://www.baruchhaba.org/m/index.php?page=index');
-//if(strpos($_SERVER['HTTP_USER_AGENT'], 'iPhone') !== FALSE ||strpos($_SERVER['HTTP_USER_AGENT'], 'iPod') !== FALSE) {
-//	header("Location: " . MOBILE_SITE_URL);
-//}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -27,7 +23,6 @@ $page = $_GET['page'];
 		<ul>
 		  <li><a href="?page=index">Home</a></li>
 		  <li><a href="?page=about">About</a></li>
-		  <li><a href="?page=news_and_events">News and Events</a></li>
 		</ul>
 		<div id="info">
 
