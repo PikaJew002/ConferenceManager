@@ -58,6 +58,5 @@ $page = $_GET['page'];
 		</div>
 	</div>
 </div>
-<?php include("counter/counter.php"); ?>
 </body>
 </html>
