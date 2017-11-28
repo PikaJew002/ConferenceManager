@@ -12,7 +12,7 @@ $page = $_GET['page']
 <!-- title -->
   <title>Conference Manager</title>
 <!-- css -->
-  <link rel="stylesheet" href="style2.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
 </head>
 <body>
 <div id="main">
