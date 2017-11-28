@@ -12,7 +12,7 @@ body {
      background: #e0e0e0;
 }
 #main {
-     width: 900px;
+     width: 1200px;
      margin-left: auto;
      margin-right: auto;
      text-align: left;
@@ -28,7 +28,7 @@ body {
      padding: 0px;
      background: #4c7ff4;
      height: 140px;
-     background:url(images/header.png) no-repeat;
+     /*background:url(img/header_img.png) no-repeat; */
 }
 #left-null {
      width: 240px;
@@ -50,7 +50,7 @@ body {
 	padding-left: 20px;
 }
 #right-null {
-     width: 660px;
+     width: 960px;
      float: right;
      padding: 0;
      border: 0;
@@ -73,9 +73,9 @@ body {
      padding: 0px;
      text-align: center;
      color: rgb(0, 0, 0);
-	 line-height: normal;
-	 font-family: Arial,Helvetica,FreeSans,sans-serif;
-	 font-size: 10px;
+     line-height: normal;
+     font-family: Arial,Helvetica,FreeSans,sans-serif;
+     font-size: 10px;
      height: 100px;
      padding-right: 25px;
      margin-top: -13px;
@@ -85,8 +85,6 @@ body {
 
 /* header */
 #header h1 {
-      color: #fff;
-      font-size: 180%;
       padding-top: 45px;
       padding-left: 40px;
 }
@@ -159,10 +157,6 @@ h2  {
 
 #footer a {
       color: #fff;
-}
-
-#header {
-	color:rgb(51, 51, 255);
 }
 
 .red_header {

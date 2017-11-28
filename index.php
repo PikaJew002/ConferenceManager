@@ -16,7 +16,11 @@ $page = $_GET['page'];
 </head>
 <body>
 <div id="main">
-	<div id="header-null"><div id="header"></div></div>
+	<div id="header-null">
+    <div id="header">
+      <h1 style="font-size: 50px; color: #235cdc; text-align: center;">Conference Manager</h1>
+    </div>
+  </div>
 	<div id="left-null">
 		<div id="left">
 		<h2>Menu</h2>
@@ -54,7 +58,7 @@ $page = $_GET['page'];
 	<hr class="noscreen" />
 	<div id="footer-null">
 		<div id="footer"><br />
-		Copyright 2017 - Conference Manager - conference management software by Aaron Eisenberg and Sunit Patel<br />
+		    &copy; Copyright 2017 - Conference Manager - conference management software by Aaron Eisenberg and Sunit Patel<br />
 		</div>
 	</div>
 </div>
