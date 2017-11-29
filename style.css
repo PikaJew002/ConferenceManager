@@ -19,21 +19,29 @@ body {
 }
 
 #main #header h1 {
-  text-align: center;
-  line-height: 200px;
-  font-size: 50px;
+  padding-left: 50px;
+  color: #9F1D35;
+  line-height: 100px;
+  font-size: 70px;
+}
+
+#main #header p {
+  color: #9F1D35;
+  padding-left: 100px;
+  line-height: 0px;
+  font-size: 30px;
 }
 
 #main #body {
   background-color: #d0d0d0;
   width: inherit;
-  height: auto;
 }
 
 #main #body #nav {
-  background-color: #e0e0e0;  width: 100%;
+  background-color: #d0d0d0;
+  width: 100%;
   height: 70px;
-  border-bottom: 10px solid #a0a0a0;
+  border-bottom: 10px solid #9F1D35;
   margin-bottom: -12px;
 }
 
@@ -45,11 +53,11 @@ body {
   padding: 25px 30px 27px 30px;
   text-decoration: none;
   font-size: 25px;
-  border-bottom: 10px solid #a0a0a0;
+  border-bottom: 10px solid #9F1D35;
 }
 
 #main #body #nav a:hover {
-  border-bottom-color: black;
+  border-bottom-color: #5b0000;
 }
 
 #main #body #nav a:visited {
@@ -60,12 +68,14 @@ body {
   margin: 20px;
   background-color: #d0d0d0;
   width: 100%;
-  height: 800px;
   box-sizing: border-box;
+  color: #9F1D35;
+  overflow: auto;
 }
 
 #main #body #content #container {
   padding-top: 10px;
+  padding-bottom: 30px;
   background-color: #d0d0d0;
 }
 
@@ -75,6 +85,7 @@ body {
   background-color: #a0a0a0;
   border-radius: 15px;
   padding: 20px;
+  margin: 10px;
 }
 
 #main #body #content #container #header_box #content {
@@ -87,4 +98,24 @@ body {
 
 #main #body #content #container #header_box #content h1 {
   font-size: 29px;
+}
+
+#main #body #content #container #sub_container .sub_box {
+  width: 500px;
+  height: 250px;
+  background-color: #a0a0a0;
+  float: left;
+  border-radius: 15px;
+  padding: 20px;
+  margin: 15px;
+}
+
+#main #body #content #container #sub_container .sub_box .content {
+  width: 425px;
+  height: 180px;
+  background-color: #d0d0d0;
+  float: left;
+  border-radius: 15px;
+  padding: 20px;
+  margin: 15px;
 }

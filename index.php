@@ -18,6 +18,9 @@ $page = $_GET['page']
 <div id="main">
   <div id="header">
     <h1>Conference Manager</h1>
+    <p>
+      <em>Excellence in conference management since like a week ago</em>
+    </p>
   </div>
   <div id="body">
     <div id="nav">
