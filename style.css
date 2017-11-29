@@ -50,7 +50,7 @@ body {
 }
 
 #main #body #nav a:hover {
-  border-bottom: 10px solid black;
+  border-bottom-color: black;
 }
 
 #main #body #nav a:visited {
