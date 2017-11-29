@@ -1,17 +1,23 @@
 <?php
   if($_POST['login']) {
+    session_start();
     #validate login fields
     if(!empty($_POST['email']) && !empty($_POST['passwd'])) {
       #check login credentials
-      $mysqli = new mysqli("localhost", "root", "admin", "conference_manager")
+      $mysqli = new mysqli("localhost", "root", "admin", "conference_manager");
       if($mysqli->connect_error) {
-        die("<p style=\"color: white;\">Connect Error (".$mysqli->connect_errno.") ".$mysqli->connect_error."</p>");
+        header("Location: ../index.php?page=login&error_msg=db_conn_fail");
+      }
+      $email = $mysqli->real_escape_string($_POST['email']);
+      $passwd = $mysqli->real_escape_string($_POST['passwd']);
+      $result = $mysqli->query("SELECT * FROM conference_admin WHERE email='$email' AND password='$passwd'");
+      if($result->num_rows == 1) {
+        $_SESSION['id'] = $email;
+        header("Location: ../manager/index.php");
       } else {
-        echo "<p style=\"color: white;\">Connect good.</p>";
-        phpinfo()
+        header("Location: ../index.php?page=login&error_msg=login_not_success");
       }
     } else {
-      $errorMsg = "";
       header("Location: ../index.php?page=login&error_msg=fields_empty");
     }
   }
@@ -45,6 +51,8 @@
           if($_GET['error_msg']) {
             if($_GET['error_msg'] == "fields_empty") {
               echo "<p>You have empty fields! Enter your email and password before pressing submit.</p>";
+            } else {
+              echo $_GET['error_msg'];
             }
           }
           ?>

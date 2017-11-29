@@ -1,6 +1,7 @@
 <?php
 session_start();
-$page = $_GET['page']
+require("inc/auth.php");
+$page = $_GET['page'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -36,9 +37,9 @@ $page = $_GET['page']
   </div>
   <div id="body">
     <div id="nav">
-      <a href="?page=index">Home</a>
-      <a href="?page=register">Register</a>
-      <a href="?page=login">Login</a>
+      <a href="?page=index">Conferences</a>
+      <a href="?page=profile">Profile</a>
+      <a href="?page=logout">Logout</a>
     </div>
     <div id="content">
       <?php
