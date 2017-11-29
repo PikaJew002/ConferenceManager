@@ -1,4 +1,4 @@
-<div id="container" style="">
+<div id="container">
   <div id="header_box">
     <div id="content">
       <h1>The one-stop-shop for all of your conference needs</h1>

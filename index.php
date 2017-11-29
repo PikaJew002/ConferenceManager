@@ -12,7 +12,18 @@ $page = $_GET['page']
 <!-- title -->
   <title>Conference Manager</title>
 <!-- css -->
-  <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="style.css" type="text/css" />
+  <?php
+  if($page) {
+    if(!strpos($page,".")&&!strpos($page,"/")) {
+      if(file_exists("inc/".$page.".php")) {
+        echo "<link rel=\"stylesheet\" href=\"inc/style.".$page.".css\" type=\"text/css\" />\n";
+      }
+    }
+  } else {
+    echo "<link rel=\"stylesheet\" href=\"inc/style.index.css\" type=\"text/css\" />\n";
+  }
+  ?>
 </head>
 <body>
 <div id="main">
