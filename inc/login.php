@@ -3,6 +3,13 @@
     #validate login fields
     if(!empty($_POST['email']) && !empty($_POST['passwd'])) {
       #check login credentials
+      $mysqli = new mysqli("localhost", "root", "admin", "conference_manager")
+      if($mysqli->connect_error) {
+        die("<p style=\"color: white;\">Connect Error (".$mysqli->connect_errno.") ".$mysqli->connect_error."</p>");
+      } else {
+        echo "<p style=\"color: white;\">Connect good.</p>";
+        phpinfo()
+      }
     } else {
       $errorMsg = "";
       header("Location: ../index.php?page=login&error_msg=fields_empty");
