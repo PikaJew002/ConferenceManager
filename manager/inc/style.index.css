@@ -1,10 +1,29 @@
 #container {
-  padding-top: 10px;
-  padding-bottom: 30px;
   background-color: #d0d0d0;
 }
 
 #container #conferences {
-  width: 200px;
+  width: 280px;
+  height: auto;
+  background-color: #c0c0c0;
   float: left;
+}
+
+#container #conferences a {
+  width: 240px;
+  height: 35px;
+  color: black;
+  font-size: 20px;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+  padding: 20px;
+}
+
+#container #conferences a:hover {
+  background-color: #b0b0b0;
+}
+
+#container #conferences a:visited {
+  color: black;
 }
