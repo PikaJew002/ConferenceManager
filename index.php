@@ -41,21 +41,21 @@ $page = $_GET['page']
       <a href="?page=login">Login</a>
     </div>
     <div id="content">
-      <?php
-			if($page) {
-				if(!strpos($page,".")&&!strpos($page,"/")) {
-					if(file_exists("inc/".$page.".php")) {
-						include("inc/".$page.".php");
-					} else {
-						echo "Sorry, that page does not exist.<br />";
-					}
-				} else {
-					echo "Not allowed!";
-				}
-			} else {
-				include("inc/index.php");
-			}
-			?>
+<?php
+if($page) {
+	if(!strpos($page,".")&&!strpos($page,"/")) {
+		if(file_exists("inc/".$page.".php")) {
+			include("inc/".$page.".php");
+		} else {
+			echo "Sorry, that page does not exist.<br />";
+		}
+	} else {
+		echo "Not allowed!";
+	}
+} else {
+	include("inc/index.php");
+}
+?>
     </div>
   </div>
 </div>
