@@ -2,6 +2,7 @@
 session_start();
 require("inc/auth.php");
 require("inc/conn.php");
+$userData = $mysqli->query("SELECT * FROM admin_users WHERE email=\"".$_SESSION['id']."\"")->fetch_assoc();
 $page = $_GET['page'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -33,7 +34,7 @@ $page = $_GET['page'];
   <div id="header">
     <h1>Conference Manager</h1>
     <p>
-      <em>Excellence in conference management since like a week ago</em>
+      <em>Welcome, <?php echo $userData['first_name']; ?>. Let's get to managing!</em>
     </p>
   </div>
   <div id="body">
@@ -43,21 +44,21 @@ $page = $_GET['page'];
       <a href="?page=logout">Logout</a>
     </div>
     <div id="content">
-      <?php
-			if($page) {
-				if(!strpos($page,".")&&!strpos($page,"/")) {
-					if(file_exists("inc/".$page.".php")) {
-						include("inc/".$page.".php");
-					} else {
-						echo "Sorry, that page does not exist.<br />";
-					}
-				} else {
-					echo "Not allowed!";
-				}
-			} else {
-				include("inc/index.php");
-			}
-			?>
+<?php
+if($page) {
+	if(!strpos($page,".")&&!strpos($page,"/")) {
+		if(file_exists("inc/".$page.".php")) {
+			include("inc/".$page.".php");
+		} else {
+			echo "Sorry, that page does not exist.<br />";
+		}
+	} else {
+		echo "Not allowed!";
+	}
+} else {
+	include("inc/index.php");
+}
+?>
     </div>
   </div>
 </div>
