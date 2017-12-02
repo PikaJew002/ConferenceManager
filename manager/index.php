@@ -1,9 +1,38 @@
 <?php
 session_start();
-require("inc/auth.php");
-require("inc/conn.php");
-$userData = $mysqli->query("SELECT * FROM admin_users WHERE email=\"".$_SESSION['id']."\"")->fetch_assoc();
-$page = $_GET['page'];
+require("inc/auth.php"); # this is a protected page, must be logged in
+require("inc/conn.php"); # database connection required
+$userData = $mysqli->query("SELECT * FROM admin_users WHERE email=\"".$_SESSION['id']."\"")->fetch_assoc(); # get user data from session
+$page = $_GET['page']; # gets the page to include
+$content = $_GET['content'];
+#if the create conference submit button was pressed
+if($_POST['create_conference']) {
+  #check for empty fields
+  if(!empty($_POST['name']) && !empty($_POST['location'])) {
+    $confName = $mysqli->real_escape_string($_POST['name']);
+    $check = $mysqli->query("SELECT * FROM conferences WHERE name='$confName'");
+    #check that conference name is not already in use
+    if($check->num_rows == 0) {
+      $admin = $userData['email'];
+      $confLocal = $mysqli->real_escape_string($_POST['location']);
+      $dateStart = $_POST['start_year'].str_pad($_POST['start_month'], 2, "0", STR_PAD_LEFT).str_pad($_POST['start_day'], 2, "0", STR_PAD_LEFT);
+      $dateEnd = $_POST['end_year'].str_pad($_POST['end_month'], 2, "0", STR_PAD_LEFT).str_pad($_POST['end_day'], 2, "0", STR_PAD_LEFT);
+      $query = "INSERT INTO conferences (name, admin, location, date_start, date_end) VALUES ('$confName', '$admin', '$confLocal', '$dateStart', '$dateEnd')";
+      echo "eh";
+      if($result = $mysqli->query($query)) {
+        header("Location: conference.php?name="+$confName);
+      }
+    } else {
+      $content = "create";
+      $msg = "There is already a conference with that name. Please choose another.";
+    }
+  } else {
+    $content = "create";
+    $msg = "Make sure all your fields are filled in!";
+  }
+} else {
+  $msg = "";
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
