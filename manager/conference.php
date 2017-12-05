@@ -28,9 +28,11 @@ $conference = $_GET['name'];
   </div>
   <div id="body">
     <div id="nav">
-      <a href="?page=index">Conferences</a>
-      <a href="?page=profile">Profile</a>
-      <a href="?page=logout">Logout</a>
+      <a href="?page=index">Overview</a>
+      <a href="?page=papers">Papers Submitted</a>
+      <a href="?page=reviews">Paper Reviewers</a>
+      <a href="?page=sessions">Sessions</a>
+      <a href=""></a>
     </div>
     <div id="content">
 <?php

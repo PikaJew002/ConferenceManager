@@ -18,9 +18,8 @@ if($_POST['create_conference']) {
       $dateStart = $_POST['start_year'].str_pad($_POST['start_month'], 2, "0", STR_PAD_LEFT).str_pad($_POST['start_day'], 2, "0", STR_PAD_LEFT);
       $dateEnd = $_POST['end_year'].str_pad($_POST['end_month'], 2, "0", STR_PAD_LEFT).str_pad($_POST['end_day'], 2, "0", STR_PAD_LEFT);
       $query = "INSERT INTO conferences (name, admin, location, date_start, date_end) VALUES ('$confName', '$admin', '$confLocal', '$dateStart', '$dateEnd')";
-      echo "eh";
       if($result = $mysqli->query($query)) {
-        header("Location: conference.php?name="+$confName);
+        header("Location: conference.php?name=".$confName);
       }
     } else {
       $content = "create";

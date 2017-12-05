@@ -50,7 +50,7 @@ $query = "SELECT name FROM conferences WHERE admin=\"".$_SESSION['id']."\"";
 $result = $mysqli->query($query);
 if($result->num_rows >= 1) {
   while($row = $result->fetch_assoc()) {
-    echo "\t\t\t\t<a href=\"conference.php?name=\"".$row['name'].">".$row['name']."</a>\n";
+    echo "\t\t\t\t<a href=\"conference.php?name=".$row['name']."\">".$row['name']."</a>\n";
   }
 }
 ?>
