@@ -7,7 +7,7 @@
         <p>
           <?php if($_GET['edit'] && $_GET['edit'] == "true") {
             /* execute/echo the following block if the conference is being edited */ ?>
-          <form action="" method="post">
+          <form action="conference.php" method="post">
           Name: <br>
             <input type="text" name="new_name" size="30" value="<?php echo $conf['name']; ?>">
             <input type="hidden" name="old_name" value="<?php echo $conf['name']; ?>"><br>

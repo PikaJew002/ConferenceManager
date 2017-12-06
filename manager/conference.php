@@ -1,10 +1,15 @@
 <?php
 session_start();
-require("inc/auth.php");
-require("inc/conn.php");
-$userData = $mysqli->query("SELECT * FROM admin_users WHERE email=\"".$_SESSION['id']."\"")->fetch_assoc();
-$conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_GET['name'])."\"")->fetch_assoc();
-$page = $_GET['page'];
+require("inc/auth.php"); # this is a protected page, must be logged in
+require("inc/conn.php"); # database connection required
+$userData = $mysqli->query("SELECT * FROM admin_users WHERE email=\"".$_SESSION['id']."\"")->fetch_assoc(); # get admin user data from session
+$conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_GET['name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
+$page = $_GET['page']; # get page to include from URL
+
+/******* if the save changes/edit_conference submit button was pressed *******/
+if($_POST['edit_conference']) {
+
+}
 ?>
 <!DOCTYPE html>
 <html>
