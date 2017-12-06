@@ -69,5 +69,41 @@ body {
   background-color: #d0d0d0;
   box-sizing: border-box;
   color: #9F1D35;
+  font-size: 14px;
   overflow: auto;
+}
+
+#container {
+  background-color: #d0d0d0;
+}
+
+#container #control_panel {
+  width: 280px;
+  height: 100%;
+  background-color: #c0c0c0;
+  float: left;
+}
+
+#container #control_panel a {
+  width: 240px;
+  height: 35px;
+  color: black;
+  font-size: 20px;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+  padding: 20px;
+}
+
+#container #control_panel a:hover {
+  background-color: #b0b0b0;
+}
+
+#container #control_panel a:visited {
+  color: black;
+}
+
+#container #content_panel {
+  padding: 20px;
+  float: left;
 }

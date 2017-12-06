@@ -56,6 +56,8 @@ if($_POST['create_conference']) {
     echo "<link rel=\"stylesheet\" href=\"inc/style.index.css\" type=\"text/css\" />\n";
   }
   ?>
+  <!-- javascript -->
+    <script src="functions.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="main">

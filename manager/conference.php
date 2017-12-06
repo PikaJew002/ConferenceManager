@@ -3,7 +3,8 @@ session_start();
 require("inc/auth.php");
 require("inc/conn.php");
 $userData = $mysqli->query("SELECT * FROM admin_users WHERE email=\"".$_SESSION['id']."\"")->fetch_assoc();
-$conference = $_GET['name'];
+$conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_GET['name'])."\"")->fetch_assoc();
+$page = $_GET['page'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -17,29 +18,30 @@ $conference = $_GET['name'];
   <title>Conference Manager</title>
 <!-- css -->
   <link rel="stylesheet" href="style.conference.css" type="text/css" />
+<!-- javascript -->
+  <script src="functions.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="main">
   <div id="header">
-    <h1><?php echo $conference; ?></h1>
+    <h1><?php echo $conf['name']; ?></h1>
     <p>
-      <em>Hello, <?php echo $userData['first_name']; ?>. !</em>
+      <em>Hello, <?php echo $userData['first_name']; ?>.</em>
     </p>
   </div>
   <div id="body">
     <div id="nav">
-      <a href="?page=index">Overview</a>
-      <a href="?page=papers">Papers Submitted</a>
-      <a href="?page=reviews">Paper Reviewers</a>
-      <a href="?page=sessions">Sessions</a>
-      <a href=""></a>
+      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=index">Overview</a>
+      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=papers">Papers Submitted</a>
+      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=reviews">Paper Reviewers</a>
+      <a href="index.php">Back to Conferences</a>
     </div>
     <div id="content">
 <?php
 if($page) {
 	if(!strpos($page,".")&&!strpos($page,"/")) {
-		if(file_exists("inc/".$page.".php")) {
-			include("inc/".$page.".php");
+		if(file_exists("conf/".$page.".php")) {
+			include("conf/".$page.".php");
 		} else {
 			echo "Sorry, that page does not exist.<br />";
 		}
@@ -47,7 +49,7 @@ if($page) {
 		echo "Not allowed!";
 	}
 } else {
-	include("inc/index.php");
+	include("conf/index.php");
 }
 ?>
     </div>
