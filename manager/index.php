@@ -1,7 +1,7 @@
 <?php
 session_start();
-require("inc/auth.php"); # this is a protected page, must be logged in
-require("inc/conn.php"); # database connection required
+require("inc/conn.php"); # this is a protected page, must be logged in
+require("inc/auth.php"); # database connection required
 $userData = $mysqli->query("SELECT * FROM admin_users WHERE email=\"".$_SESSION['id']."\"")->fetch_assoc(); # get admin user data from session
 $page = $_GET['page']; # gets the page to include
 $content = $_GET['content'];

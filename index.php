@@ -1,6 +1,7 @@
 <?php
 session_start();
-$page = $_GET['page']
+$page = $_GET['page'];
+require("inc/conn.php");
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,7 +38,7 @@ $page = $_GET['page']
   <div id="body">
     <div id="nav">
       <a href="?page=index">Home</a>
-      <a href="?page=register">Register</a>
+      <a href="?page=conferences">View Conferences</a>
       <a href="?page=login">Login</a>
     </div>
     <div id="content">
