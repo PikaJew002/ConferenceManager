@@ -104,6 +104,26 @@ body {
 }
 
 #container #content_panel {
+  padding: 10px;
+  float: left;
+}
+
+#container #content_panel .paper {
+ height: 50px;
+}
+
+#container #content_panel .paper .element {
+  height: 50px;
   padding: 20px;
+  float: left;
+}
+
+#container #content_view_panel {
+  padding: 10px;
+  float: left;
+}
+
+#container #content_view_more_panel {
+  padding: 10px;
   float: left;
 }

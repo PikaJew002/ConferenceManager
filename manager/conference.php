@@ -66,6 +66,11 @@ if($_POST['edit_conference']) {
   <title>Conference Manager</title>
 <!-- css -->
   <link rel="stylesheet" href="style.conference.css" type="text/css" />
+  <style>
+  table, th, tr, td {
+    padding: 10px;
+  }
+  </style>
 <!-- javascript -->
   <script src="functions.js" type="text/javascript"></script>
 </head>
@@ -81,7 +86,7 @@ if($_POST['edit_conference']) {
     <div id="nav">
       <a href="conference.php?name=<?php echo $conf['name']; ?>&page=index">Overview</a>
       <a href="conference.php?name=<?php echo $conf['name']; ?>&page=papers">Papers Submitted</a>
-      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=reviews">Paper Reviewers</a>
+      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=reviewers">Paper Reviewers</a>
       <a href="index.php">Back to Conferences</a>
     </div>
     <div id="content">

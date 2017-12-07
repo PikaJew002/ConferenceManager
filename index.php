@@ -2,6 +2,29 @@
 session_start();
 $page = $_GET['page'];
 require("inc/conn.php");
+
+if($_POST['login']) {
+  session_start();
+  #validate login fields
+  if(!empty($_POST['email']) && !empty($_POST['password'])) {
+    #check login credentials
+    $email = $mysqli->real_escape_string($_POST['email']);
+    $result = $mysqli->query("SELECT * FROM admin_users WHERE email='{$email}'");
+    if($result->num_rows == 1) {
+      $admin = $result->fetch_assoc();
+      if(password_verify($_POST['password'], $admin['password'])) {
+        $_SESSION['id'] = $email;
+        header("Location: manager/index.php");
+      } else {
+        header("Location: index.php?page=login&error_msg=email_password_no_match");
+      }
+    } else {
+      header("Location: index.php?page=login&error_msg=email_not_found");
+    }
+  } else {
+    header("Location: index.php?page=login&error_msg=fields_empty");
+  }
+}
 ?>
 <!DOCTYPE html>
 <html>

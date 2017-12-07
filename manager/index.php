@@ -16,14 +16,16 @@ if($_POST['create_conference']) {
     if($check->num_rows == 0) {
       $admin = $userData['email'];
       $confLocal = $mysqli->real_escape_string($_POST['location']);
-      $dateStart = $_POST['start_year'].str_pad($_POST['start_month'], 2, "0", STR_PAD_LEFT).str_pad($_POST['start_day'], 2, "0", STR_PAD_LEFT);
-      $dateEnd = $_POST['end_year'].str_pad($_POST['end_month'], 2, "0", STR_PAD_LEFT).str_pad($_POST['end_day'], 2, "0", STR_PAD_LEFT);
+      $dateStart = $_POST['start_date'];
+      $dateEnd = $_POST['end_date'];
       $query = "INSERT INTO conferences (name, admin_email, location, date_start, date_end) VALUES ('$confName', '$admin', '$confLocal', '$dateStart', '$dateEnd')";
       #if query is successful, redirect to conference page
       if($result = $mysqli->query($query)) {
         header("Location: conference.php?name=".$confName);
+      } else {
+        $content = "create";
+        $msg = "Database error. Could not insert a new conference.";
       }
-
     } else {
       $content = "create";
       $msg = "There is already a conference with that name. Please choose another.";
