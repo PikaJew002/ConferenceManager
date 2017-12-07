@@ -3,12 +3,55 @@ session_start();
 require("inc/auth.php"); # this is a protected page, must be logged in
 require("inc/conn.php"); # database connection required
 $userData = $mysqli->query("SELECT * FROM admin_users WHERE email=\"".$_SESSION['id']."\"")->fetch_assoc(); # get admin user data from session
-$conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_GET['name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
-$page = $_GET['page']; # get page to include from URL
+if($_GET['name']) {
+  $conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_GET['name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
+}
+if($_GET['page']) {
+  $page = $_GET['page']; # get page to include from URL
+}
+if($_GET['edit']) {
+  $edit = $_GET['edit']; # is the conference being edited?
+}
+$msg = ""; # default: there are not error messages
 
 /******* if the save changes/edit_conference submit button was pressed *******/
+#  In this case, the conference name, page, nor edit are not set via url, need to be set manually if validation is not passed or update query unsuccessful
 if($_POST['edit_conference']) {
-
+  #check for any empty fields
+  if(!empty($_POST['new_name']) && !empty($_POST['new_location']) && !empty($_POST['new_start_date']) && !empty($_POST['new_end_date'])) {
+    #check if name is changed
+    $newName = $mysqli->real_escape_string($_POST['new_name']);
+    $newLocation = $mysqli->real_escape_string($_POST['new_location']);
+    $newStartDate = $mysqli->real_escape_string($_POST['new_start_date']);
+    $newEndDate = $mysqli->real_escape_string($_POST['new_end_date']);
+    $oldName = $_POST['old_name'];
+    $email = $_SESSION['id'];
+    if($_POST['old_name'] != $_POST['new_name']) {
+      $query = "SELECT * from conferences WHERE name=\"".$mysqli->real_escape_string($_POST['new_name'])."\" AND admin_email=\"".$_SESSION['id']."\"";
+      $results = $mysqli->query($query);
+      #check if new name is unused
+      if($results->num_rows == 0) {
+        $updateQuery = "UPDATE conferences SET name='$newName', location='$newLocation', date_start='$newStartDate', date_end='$newEndDate' WHERE name='$oldName' AND admin_email='$email'";
+        $update = $mysqli->query($updateQuery);
+        if($update) {
+          header("Location: conference.php?name=".$newName."&page=index");
+        }
+      } else {
+        $msg = "The new name you gave for the conference is already in use! Please choose another one.";
+      }
+    } else {
+      $updateQuery = "UPDATE conferences SET location='$newLocation', date_start='$newStartDate', date_end='$newEndDate' WHERE name='$oldName' AND admin_email='$email'";
+      $update = $mysqli->query($updateQuery);
+      if($update) {
+        header("Location: conference.php?name=".$newName."&page=index");
+      }
+    }
+  } else {
+    $msg = "Make sure all fields are filled in (this includes starting and ending dates)!";
+  }
+  $page = "index";
+  $conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_POST['old_name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
+  $edit = "true";
 }
 ?>
 <!DOCTYPE html>
