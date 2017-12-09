@@ -2,24 +2,29 @@
 session_start();
 $page = $_GET['page'];
 require("inc/conn.php");
+require("manager/inc/classes.php");
 
 if($_POST['login']) {
-  session_start();
-  #validate login fields
+  # check for empty fields
   if(!empty($_POST['email']) && !empty($_POST['password'])) {
-    #check login credentials
-    $email = $mysqli->real_escape_string($_POST['email']);
-    $result = $mysqli->query("SELECT * FROM admin_users WHERE email='{$email}'");
-    if($result->num_rows == 1) {
-      $admin = $result->fetch_assoc();
-      if(password_verify($_POST['password'], $admin['password'])) {
-        $_SESSION['id'] = $email;
-        header("Location: manager/index.php");
+    # check for valid email and password
+    if(Admin::isValidEmail($_POST['email']) && Admin::isValidPassword($_POST['password'])) {
+      $admin = new Admin($mysqli, $_POST['email'], $_POST['password']); # initialize new admin object
+      # check if email exists
+      if($admin->doesExist()) {
+        # check if email and password match
+        if($admin->isLoggedIn()) {
+          # login successful,
+          $_SESSION['id'] = $admin->getEmail();
+          header("Location: manager/index.php");
+        } else {
+          header("Location: index.php?page=login&error_msg=email_password_no_match");
+        }
       } else {
-        header("Location: index.php?page=login&error_msg=email_password_no_match");
+        header("Location: index.php?page=login&error_msg=email_not_found");
       }
     } else {
-      header("Location: index.php?page=login&error_msg=email_not_found");
+      header("Location: index.php?page=login&error_msg=email_or_password_not_valid");
     }
   } else {
     header("Location: index.php?page=login&error_msg=fields_empty");

@@ -6,22 +6,33 @@ class Login {
   private $tblName;
   private $email;
   private $password;
+  private $firstName;
+  private $lastName;
   private $exists;
   private $loggedIn;
 
-  public function __construct($mysqli, $tblName, $email, $password = "") {
+  public function __construct($mysqli, $tblName, $email, $password) {
+    # sets properties of class from provided values (or default values)
     $this->mysqli = $mysqli;
     $this->tblName = $tblName;
     $this->email = $email;
     $this->password = $password;
+    $this->exists = false;
+    $this->loggedIn = false;
+
+    # runs login verification/and sets firstName and lastName from database
     $this->login();
   }
 
-  private function login(): bool {
+  # sets exists and loggedIn based on email and password combination
+  private function login() {
     $result = $mysqli->query("SELECT * FROM {$this->tblName} WHERE email='{$this->email}'");
     if($result->num_rows == 1) {
       $this->exists = true;
-      if(password_verify($this->password, $result->fetch_assoc()['password'])) {
+      $admin = $result->fetch_assoc();
+      $this->firstName = $admin['first_name'];
+      $this->lastName = $admin['last_name'];
+      if(password_verify($this->password, $admin['password'])) {
         $this->loggedIn = true;
       } else {
         $this->loggedIn = false;
@@ -31,37 +42,22 @@ class Login {
     }
   }
 
-  public function doesExist() {
+  public static function isValidEmail($email): bool {
+    # code later, if time
+    return true;
+  }
+
+  public static function isValidPassword($password): bool {
+    # code later, if time
+    return true;
+  }
+
+  public function doesExist(): bool {
     return $this->exists;
   }
 
-  public function isLoggedIn() {
+  public function isLoggedIn(): bool {
     return $this->loggedIn;
-  }
-}
-
-class Admin extends Login {
-
-  private $firstName;
-  private $lastName;
-
-  public function __construct($mysqli, $email, $password = "", $firstName = "", $lastName = "") {
-    parent::__construct($mysqli, "admin_users", $email, $password);
-    $this->firstName = $firstName;
-    $this->lastName = $lastName;
-  }
-
-  private function setFromDB() {
-    $query = "SELECT * FROM admin_users WHERE email='".$this->email."' AND password='".$this->password."'";
-    $result = $this->dbConn->query($query);
-    if($result->num_rows != 0) {
-      $admin = $result->fetch_assoc();
-      $this->firstName = $admin['first_name'];
-      $this->lastName = $admin['last_name'];
-      return true;
-    } else {
-      return false;
-    }
   }
 
   public function getEmail() {
@@ -71,13 +67,58 @@ class Admin extends Login {
   public function getPassword() {
     return $this->password;
   }
+}
 
-  public function getFirstName() {
-    return $this->firstName;
+class Admin extends Login {
+
+  public function __construct($mysqli, $email, $password, $firstName = "", $lastName = "") {
+    parent::__construct($mysqli, "admin_users", $email, $password); # verifies login and sets first and last name from database
+  }
+}
+
+class Reviewer extends Login {
+
+  private $confName;
+  private $phone;
+  private $isAuth;
+
+  public function __construct($mysqli, $email, $password, $confName = "", $firstName = "", $lastName = "", $phone = "") {
+    parent::__construct($mysqli, "reviewers", $email, $password); # verifies login and sets first and last name from database
+
+    if($this->doesExist() && $this->isLoggedIn()) {
+      $this->populate();
+    }
   }
 
-  public function getLastName() {
-    return $this->lastName;
+  private function populate() {
+    $result = $mysqli->query("SELECT * FROM {$this->tblName} WHERE email='{$this->email}'");
+    $reviewer = $result->fetch_assoc();
+    $this->confName = $reviewer['conf_name'];
+    $this->phone = $reviewer['phone'];
+    $this->isAuth = (bool) $reviewer['is_auth'];
+  }
+}
+
+class Researcher extends Login {
+
+  private $confName;
+  private $phone;
+  private $isRSVP;
+
+  public function __construct($mysqli, $email, $password, $confName = "", $firstName = "", $lastName = "", $phone = "") {
+    parent::__construct($mysqli, "reviewers", $email, $password); # verifies login and sets first and last name
+
+    if($this->doesExist() && $this->isLoggedIn()) {
+      $this->populate();
+    }
+  }
+
+  private function populate() {
+    $result = $mysqli->query("SELECT * FROM {$this->tblName} WHERE email='{$this->email}'");
+    $researcher = $result->fetch_assoc();
+    $this->confName = $researcher['conf_name'];
+    $this->phone = $researcher['phone'];
+    $this->isRSVP = (bool) $researcher['is_rsvp'];
   }
 }
 
