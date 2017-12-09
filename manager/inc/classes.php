@@ -1,8 +1,28 @@
 <?php
-require("manager/inc/auth.php");
-require("manager/inc/conn.php");
 
-class Admin {
+class Login {
+  private $email;
+  private $password;
+  private $mysqli = null;
+  private $loggedIn = false;
+
+  public function __construct($mysqli, $tblName, $email, $password = "") {
+    $this->mysqli = $mysqli;
+    $this->email = $email;
+    $this->password = $password;
+  }
+
+  public static function exists($mysqli, $tblName, $email): bool {
+
+  }
+
+  #this function assumes that email, password, and mysqli are all set (and not ).
+  private function getRow() {
+
+  }
+}
+
+class Admin extends Login {
   private $email = "";
   private $password = "";
   private $firstName = "";
