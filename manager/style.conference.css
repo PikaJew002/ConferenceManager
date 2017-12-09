@@ -123,6 +123,14 @@ body {
   float: left;
 }
 
+#container #content_view_panel #pdf_container {
+  float: left;
+}
+
+#container #content_view_panel #abstract_container {
+  float: left;
+}
+
 #container #content_view_more_panel {
   padding: 10px;
   float: left;

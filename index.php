@@ -1,7 +1,7 @@
 <?php
 session_start();
 $page = $_GET['page'];
-require("inc/conn.php");
+require("manager/inc/conn.php");
 
 if($_POST['login']) {
   session_start();
