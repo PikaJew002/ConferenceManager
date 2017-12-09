@@ -1,46 +1,54 @@
 <?php
 
 class Login {
+
+  private $mysqli;
+  private $tblName;
   private $email;
   private $password;
-  private $mysqli = null;
-  private $loggedIn = false;
+  private $exists;
+  private $loggedIn;
 
   public function __construct($mysqli, $tblName, $email, $password = "") {
     $this->mysqli = $mysqli;
+    $this->tblName = $tblName;
     $this->email = $email;
     $this->password = $password;
+    $this->login();
   }
 
-  public static function exists($mysqli, $tblName, $email): bool {
-
+  private function login(): bool {
+    $result = $mysqli->query("SELECT * FROM {$this->tblName} WHERE email='{$this->email}'");
+    if($result->num_rows == 1) {
+      $this->exists = true;
+      if(password_verify($this->password, $result->fetch_assoc()['password'])) {
+        $this->loggedIn = true;
+      } else {
+        $this->loggedIn = false;
+      }
+    } else {
+      $this->exists = false;
+    }
   }
 
-  #this function assumes that email, password, and mysqli are all set (and not ).
-  private function getRow() {
+  public function doesExist() {
+    return $this->exists;
+  }
 
+  public function isLoggedIn() {
+    return $this->loggedIn;
   }
 }
 
 class Admin extends Login {
-  private $email = "";
-  private $password = "";
-  private $firstName = "";
-  private $lastName = "";
-  private $dbConn = null;
 
-  public function __construct($email = "", $password = "", $firstName = "", $lastName = "", $dbConn = null) {
-    if($dbConn != null && $email != "" && $password != "") {
-      $this->dbConn = $dbConn;
-      $this->email = $email;
-      $this->password = $password;
-      $this->setFromDB();
-    } else {
-      $this->email = $email;
-      $this->password = $password;
-      $this->firstName = $firstName;
-      $this->lastName = $lastName;
-    }
+  private $firstName;
+  private $lastName;
+
+  public function __construct($mysqli, $email, $password = "", $firstName = "", $lastName = "") {
+    parent::__construct($mysqli, "admin_users", $email, $password);
+    $this->firstName = $firstName;
+    $this->lastName = $lastName;
   }
 
   private function setFromDB() {
