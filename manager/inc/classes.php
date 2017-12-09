@@ -14,6 +14,7 @@ class Login {
   public function __construct($mysqli, $tblName, $email, $password) {
     # sets properties of class from provided values (or default values)
     $this->mysqli = $mysqli;
+
     $this->tblName = $tblName;
     $this->email = $email;
     $this->password = $password;
@@ -26,7 +27,7 @@ class Login {
 
   # sets exists and loggedIn based on email and password combination
   private function login() {
-    $result = $mysqli->query("SELECT * FROM {$this->tblName} WHERE email='{$this->email}'");
+    $result = $this->mysqli->query("SELECT * FROM {$this->tblName} WHERE email='{$this->email}'");
     if($result->num_rows == 1) {
       $this->exists = true;
       $admin = $result->fetch_assoc();
@@ -44,12 +45,18 @@ class Login {
 
   public static function isValidEmail($email): bool {
     # code later, if time
-    return true;
+    if($email) {
+      return true;
+    }
+    return false;
   }
 
   public static function isValidPassword($password): bool {
     # code later, if time
-    return true;
+    if($password) {
+      return true;
+    }
+    return false;
   }
 
   public function doesExist(): bool {
@@ -71,7 +78,7 @@ class Login {
 
 class Admin extends Login {
 
-  public function __construct($mysqli, $email, $password, $firstName = "", $lastName = "") {
+  public function __construct($mysqli, $email, $password) {
     parent::__construct($mysqli, "admin_users", $email, $password); # verifies login and sets first and last name from database
   }
 }
@@ -91,7 +98,7 @@ class Reviewer extends Login {
   }
 
   private function populate() {
-    $result = $mysqli->query("SELECT * FROM {$this->tblName} WHERE email='{$this->email}'");
+    $result = $this->mysqli->query("SELECT * FROM {$this->tblName} WHERE email='{$this->email}'");
     $reviewer = $result->fetch_assoc();
     $this->confName = $reviewer['conf_name'];
     $this->phone = $reviewer['phone'];
@@ -114,7 +121,7 @@ class Researcher extends Login {
   }
 
   private function populate() {
-    $result = $mysqli->query("SELECT * FROM {$this->tblName} WHERE email='{$this->email}'");
+    $result = $this->mysqli->query("SELECT * FROM {$this->tblName} WHERE email='{$this->email}'");
     $researcher = $result->fetch_assoc();
     $this->confName = $researcher['conf_name'];
     $this->phone = $researcher['phone'];

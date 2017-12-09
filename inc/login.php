@@ -17,11 +17,11 @@
               <h2>Login</h2>
               <p>
                 <form action="index.php" method="post">
-                  Email<br />
-                  <input type="text" name="email" /><br />
-                  Password<br />
-                  <input type="password" name="password" /><br />
-                  <input type="submit" name="login" value="Submit" />
+                  Email<br>
+                  <input type="text" name="email"><br>
+                  Password<br>
+                  <input type="password" name="password"><br>
+                  <input type="submit" name="login" value="Submit">
                 </form>
 <?php
 if($_GET['error_msg']) {

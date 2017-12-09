@@ -6,9 +6,10 @@ require("manager/inc/classes.php");
 
 if($_POST['login']) {
   # check for empty fields
+
   if(!empty($_POST['email']) && !empty($_POST['password'])) {
     # check for valid email and password
-    if(Admin::isValidEmail($_POST['email']) && Admin::isValidPassword($_POST['password'])) {
+    if((Admin::isValidEmail($_POST['email'])) && (Admin::isValidPassword($_POST['password']))) {
       $admin = new Admin($mysqli, $_POST['email'], $_POST['password']); # initialize new admin object
       # check if email exists
       if($admin->doesExist()) {
@@ -29,6 +30,7 @@ if($_POST['login']) {
   } else {
     header("Location: index.php?page=login&error_msg=fields_empty");
   }
+
 }
 ?>
 <!DOCTYPE html>
