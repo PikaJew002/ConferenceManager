@@ -21,6 +21,12 @@
                   <input type="text" name="email"><br>
                   Password<br>
                   <input type="password" name="password"><br>
+                  I am an
+                  <select name="user_type">
+                    <option value="researchers">researcher</option>
+                    <option value="reviewers">reviewer</option>
+                    <option value="admin_users">administrator</option>
+                  </select>
                   <input type="submit" name="login" value="Submit">
                 </form>
 <?php

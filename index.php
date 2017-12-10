@@ -6,18 +6,23 @@ require("manager/inc/classes.php");
 
 if($_POST['login']) {
   # check for empty fields
-
   if(!empty($_POST['email']) && !empty($_POST['password'])) {
     # check for valid email and password
-    if((Admin::isValidEmail($_POST['email'])) && (Admin::isValidPassword($_POST['password']))) {
-      $admin = new Admin($mysqli, $_POST['email'], $_POST['password']); # initialize new admin object
+    if((Login::isValidEmail($_POST['email'])) && (Login::isValidPassword($_POST['password']))) {
+      $user = new Login($mysqli, $_POST['user_type'], $_POST['email'], $_POST['password']); # initialize new Login object
       # check if email exists
-      if($admin->doesExist()) {
+      if($user->doesExist()) {
         # check if email and password match
-        if($admin->isLoggedIn()) {
+        if($user->isLoggedIn()) {
           # login successful,
-          $_SESSION['id'] = $admin->getEmail();
-          header("Location: manager/index.php");
+          $_SESSION['id'] = $user->getEmail();
+          if($_POST['user_type'] == "admin_users") {
+            header("Location: manager/index.php");
+          } else if($_POST['user_type'] == "reviewers") {
+            header("Location: reviewer/index.php");
+          } else {
+            header("Location: researcher/index.php");
+          }
         } else {
           header("Location: index.php?page=login&error_msg=email_password_no_match");
         }

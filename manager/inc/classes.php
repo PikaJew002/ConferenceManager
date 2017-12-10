@@ -30,10 +30,8 @@ class Login {
     $result = $this->mysqli->query("SELECT * FROM {$this->tblName} WHERE email='{$this->email}'");
     if($result->num_rows == 1) {
       $this->exists = true;
-      $admin = $result->fetch_assoc();
-      $this->firstName = $admin['first_name'];
-      $this->lastName = $admin['last_name'];
-      if(password_verify($this->password, $admin['password'])) {
+      $user = $result->fetch_assoc();
+      if(password_verify($this->password, $user['password'])) {
         $this->loggedIn = true;
       } else {
         $this->loggedIn = false;
@@ -76,25 +74,21 @@ class Login {
   }
 }
 
-class Admin extends Login {
+class Admin {
 
   public function __construct($mysqli, $email, $password) {
-    parent::__construct($mysqli, "admin_users", $email, $password); # verifies login and sets first and last name from database
+
   }
 }
 
-class Reviewer extends Login {
+class Reviewer {
 
   private $confName;
   private $phone;
   private $isAuth;
 
   public function __construct($mysqli, $email, $password, $confName = "", $firstName = "", $lastName = "", $phone = "") {
-    parent::__construct($mysqli, "reviewers", $email, $password); # verifies login and sets first and last name from database
 
-    if($this->doesExist() && $this->isLoggedIn()) {
-      $this->populate();
-    }
   }
 
   private function populate() {

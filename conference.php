@@ -1,0 +1,107 @@
+<?php
+session_start();
+require("inc/conn.php"); # database connection required
+#$userData = $mysqli->query("SELECT * FROM admin_users WHERE email='{$_SESSION['id']}')->fetch_assoc(); # get admin user data from session
+if($_GET['name']) {
+  $conf = $mysqli->real_escape_string($_GET['name']);
+  $conf = $mysqli->query("SELECT * FROM conferences WHERE name='{$conf}'")->fetch_assoc(); # get conference data from database from URL conference name
+}
+if($_GET['page']) {
+  $page = $_GET['page']; # get page to include from URL
+}
+$msg = ""; # default: there are not error messages
+
+/******* if the save changes/edit_conference submit button was pressed *******/
+#  In this case, the conference name, page, nor edit are not set via url, need to be set manually if validation is not passed or update query unsuccessful
+if($_POST['register_attendee']) {
+  #check for any empty fields
+  if(!empty($_POST['']) && !empty($_POST['new_location']) && !empty($_POST['new_start_date']) && !empty($_POST['new_end_date'])) {
+    #check if name is changed
+    $newName = $mysqli->real_escape_string($_POST['new_name']);
+    $newLocation = $mysqli->real_escape_string($_POST['new_location']);
+    $newStartDate = $mysqli->real_escape_string($_POST['new_start_date']);
+    $newEndDate = $mysqli->real_escape_string($_POST['new_end_date']);
+    $oldName = $_POST['old_name'];
+    $email = $_SESSION['id'];
+    if($_POST['old_name'] != $_POST['new_name']) {
+      $query = "SELECT * from conferences WHERE name=\"".$mysqli->real_escape_string($_POST['new_name'])."\" AND admin_email=\"".$_SESSION['id']."\"";
+      $results = $mysqli->query($query);
+      #check if new name is unused
+      if($results->num_rows == 0) {
+        $updateQuery = "UPDATE conferences SET name='$newName', location='$newLocation', date_start='$newStartDate', date_end='$newEndDate' WHERE name='$oldName' AND admin_email='$email'";
+        $update = $mysqli->query($updateQuery);
+        if($update) {
+          header("Location: conference.php?name=".$newName."&page=index");
+        }
+      } else {
+        $msg = "The new name you gave for the conference is already in use! Please choose another one.";
+      }
+    } else {
+      $updateQuery = "UPDATE conferences SET location='$newLocation', date_start='$newStartDate', date_end='$newEndDate' WHERE name='$oldName' AND admin_email='$email'";
+      $update = $mysqli->query($updateQuery);
+      if($update) {
+        header("Location: conference.php?name=".$newName."&page=index");
+      }
+    }
+  } else {
+    $msg = "Make sure all fields are filled in (this includes starting and ending dates)!";
+  }
+  $page = "index";
+  $conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_POST['old_name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
+  $edit = "true";
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<!-- meta -->
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <meta name="Description" content="description" />
+  <meta name="Keywords" content="keywords" />
+  <meta name="robots" content="all, follow" />
+<!-- title -->
+  <title><?php echo $conf['name']; ?></title>
+<!-- css -->
+  <link rel="stylesheet" href="style.conference.css" type="text/css" />
+  <style>
+  table, th, tr, td {
+    padding: 10px;
+  }
+  </style>
+<!-- javascript -->
+  <script src="functions.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="main">
+  <div id="header">
+    <h1><?php echo $conf['name']; ?></h1>
+  </div>
+  <div id="body">
+    <div id="nav">
+      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=index">About</a>
+      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=register">Registration</a>
+      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=reseacher">Researcher</a>
+      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=reviewer">Reviewer</a>
+      <a href="index.php">Back to Conferences</a>
+    </div>
+    <div id="content">
+<?php
+if($page) {
+	if(!strpos($page,".")&&!strpos($page,"/")) {
+		if(file_exists("conf/".$page.".php")) {
+			include("conf/".$page.".php");
+		} else {
+			echo "Sorry, that page does not exist.<br />";
+		}
+	} else {
+		echo "Not allowed!";
+	}
+} else {
+	include("conf/index.php");
+}
+?>
+    </div>
+  </div>
+</div>
+</body>
+</html>
