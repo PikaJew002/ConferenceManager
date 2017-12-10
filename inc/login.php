@@ -6,8 +6,15 @@
               Use the login form below to login and get to managing!
             </p>
             <p>
-              If you don't have an account yet, head to the Register page to get started with Conference
-              Manager.
+              If you are looking to register as an attendee, researcher, or
+              reviewer for a conference, head to the
+              <a href="?page=conferences">View Conferences</a> page and click on
+              your desired conference.
+            </p>
+            <p>
+              If you are interested in purchasing a copy of the Conference Manager
+              software, please send an email to <a style="color: #9F1D35; text-decoration: underline;" href="mailto:bestinthecs@koolschool.edu">Dr. Chang</a>
+              and ask about his students awesome software.
             </p>
           </div>
         </div>

@@ -27,6 +27,15 @@
   font-size: 17px;
 }
 
+#main #body #content #container #header_box #content p a {
+  color: #9F1D35;
+}
+
+#main #body #content #container #header_box #content p a:visited {
+  color: #9F1D35;
+}
+
+
 #main #body #content #container #sub_container .sub_box {
   width: 500px;
   height: 250px;

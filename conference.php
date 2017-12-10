@@ -80,9 +80,9 @@ if($_POST['register_attendee']) {
     <div id="nav">
       <a href="conference.php?name=<?php echo $conf['name']; ?>&page=index">About</a>
       <a href="conference.php?name=<?php echo $conf['name']; ?>&page=register">Registration</a>
-      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=reseacher">Researcher</a>
+      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=researcher">Researcher</a>
       <a href="conference.php?name=<?php echo $conf['name']; ?>&page=reviewer">Reviewer</a>
-      <a href="index.php">Back to Conferences</a>
+      <a href="index.php?page=conferences">Back to Conferences</a>
     </div>
     <div id="content">
 <?php
