@@ -18,7 +18,10 @@ if($_POST['register_attendee']) {
   if(!empty($_POST['email']) && !empty($_POST['first_name']) && !empty($_POST['last_name'])) {
     # check for empty fields in the credit card information section
     if(!empty($_POST['number']) && !empty($_POST['name_card']) && !empty($_POST['billing_address']) && !empty($_POST['exp_date']) && !empty($_POST['sec_code'])) {
-      
+      # add more validation if time allows
+
+      # add attendee to the database
+      $attendee = new Attendee($mysqli, 0, $_POST['name_card'], $_POST['name_card']);
     } else {
       $msg = "You have empty fields in the credit card information section. Make sure all fields are filled in!";
     }

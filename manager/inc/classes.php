@@ -187,7 +187,7 @@ class Attendee {
   private $firstName;
   private $lastName;
   private $confName;
-  private Card $card;
+  private $card;
   private $whenRegistered;
   private $exists;
 
@@ -214,16 +214,36 @@ class Card {
     $this->mysqli = $mysqli;
     $this->id = $id;
 
-    # if only mysqli and id are provided (all other args are empty), the Card already exists
-    if(!empty($cardNum) && !empty($name) && !empty($billingAddress) && !empty($exp) && !empty($securityCode)) {
+    # if id == 0, a new Card will be created
+    if($this->id == 0) {
+      # escape properties for database
+      $this->cardNum = $this->mysqli->real_escape_string($this->cardNum);
+      $this->name = $this->mysqli->real_escape_string($this->name);
+      $this->billingAddress = $this->mysqli->real_escape_string($this->billingAddress);
+      $this->exp = $this->mysqli->real_escape_string($this->exp);
+      $this->securityCode = $this->mysqli->real_escape_string($this->securityCode);
+      if($this->mysqli->query("INSERT INTO cards (card_num, name, billing_address, exp, security_code) VALUES ('{$this->cardNum}', '{$this->name}', '{$this->billingAddress}', '{$this->exp}', '{$this->securityCode}')")) {
+        $lastEntry = $this->mysqli->query("SELECT max(id) FROM cards")->fetch_assoc();
+        $this->id = $lastEntry['id'];
+      }
+    } else { #  otherwise, search for Card with id = id passed
       $this->getCard();
-    } else { #  otherwise, create a new Card and query database to INSERT,
-
     }
   }
 
   private function getCard() {
-    
+    $result = $this->mysqli->query("SELECT * FROM cards WHERE id='{$this->id}'");
+    if($result->num_rows == 1) { #  Card exists in database
+      $card = $result->fetch_assoc();
+      $this->cardNum = $card['card_num'];
+      $this->name = $card['name'];
+      $this->billingAddress = $card['billing_address'];
+      $this->exp = $card['exp'];
+      $this->securityCode = $card['security_code'];
+      return true;
+    } else { #  Card doesn't exist yet
+      return false;
+    }
   }
 }
 ?>
