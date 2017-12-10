@@ -14,7 +14,6 @@ class Login {
   public function __construct($mysqli, $tblName, $email, $password) {
     # sets properties of class from provided values (or default values)
     $this->mysqli = $mysqli;
-
     $this->tblName = $tblName;
     $this->email = $email;
     $this->password = $password;
@@ -181,4 +180,50 @@ class Conference {
   }
 }
 
+class Attendee {
+
+  private $mysqli;
+  private $email;
+  private $firstName;
+  private $lastName;
+  private $confName;
+  private Card $card;
+  private $whenRegistered;
+  private $exists;
+
+  public function __construct($mysqli, $email, $firstName, $lastName, $confName = "") {
+    $this->mysqli = $mysqli;
+    $this->email = $email;
+    $this->firstName = $firstName;
+    $this->lastName = $lastName;
+    $this->confName = $confName;
+  }
+}
+
+class Card {
+
+  private $mysqli;
+  private $id;
+  private $cardNum;
+  private $name;
+  private $billingAddress;
+  private $exp;
+  private $securityCode;
+
+  public function __construct($mysqli, $id, $cardNum = "", $name = "", $billingAddress = "", $exp = "", $securityCode = "") {
+    $this->mysqli = $mysqli;
+    $this->id = $id;
+
+    # if only mysqli and id are provided (all other args are empty), the Card already exists
+    if(!empty($cardNum) && !empty($name) && !empty($billingAddress) && !empty($exp) && !empty($securityCode)) {
+      $this->getCard();
+    } else { #  otherwise, create a new Card and query database to INSERT,
+
+    }
+  }
+
+  private function getCard() {
+    
+  }
+}
 ?>

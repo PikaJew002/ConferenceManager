@@ -13,7 +13,8 @@
             </p>
             <p>
               If you are interested in purchasing a copy of the Conference Manager
-              software, please send an email to <a style="color: #9F1D35; text-decoration: underline;" href="mailto:bestinthecs@koolschool.edu">Dr. Chang</a>
+              software, please send an email to
+              <a href="mailto:bestinthecs@koolschool.edu">Dr. Chang</a>
               and ask about his students awesome software.
             </p>
           </div>
@@ -34,7 +35,7 @@
                     <option value="reviewers">reviewer</option>
                     <option value="admin_users">administrator</option>
                   </select>
-                  <input type="submit" name="login" value="Submit">
+                  <input type="submit" name="login" value="Login">
                 </form>
 <?php
 if($_GET['error_msg']) {

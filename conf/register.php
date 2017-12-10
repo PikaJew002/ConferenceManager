@@ -7,11 +7,11 @@
           <div id="content_attendee" style="float: left; margin: 10px;">
             <h2>Personal Information</h2>
             Email: <br>
-            <input type="text" name="email" maxlength="255"><br>
+            <input type="text" name="email" maxlength="255"<?php echo ($_POST['register_attendee'] ? " value=\"".$_POST['email']."\"" : ""); ?>><br>
             First name: <br>
-            <input type="text" name="first_name" maxlength="50"><br>
+            <input type="text" name="first_name" maxlength="50"<?php echo ($_POST['register_attendee'] ? " value=\"".$_POST['first_name']."\"" : ""); ?>><br>
             Last name: <br>
-            <input type="text" name="last_name" maxlength="50"><br>
+            <input type="text" name="last_name" maxlength="50"<?php echo ($_POST['register_attendee'] ? " value=\"".$_POST['last_name']."\"" : ""); ?>><br>
           </div>
           <div id="content_card" style="float: left; margin: 10px;">
             <h2>Credit Card Information</h2>

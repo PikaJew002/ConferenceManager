@@ -27,18 +27,7 @@
   font-size: 17px;
 }
 
-#main #body #content #container #header_box #content p a {
-  color: #9F1D35;
-}
-
-#main #body #content #container #header_box #content p a:visited {
-  color: #9F1D35;
-}
-
-
 #main #body #content #container #sub_container .sub_box {
-  width: 500px;
-  height: 250px;
   background-color: #a0a0a0;
   float: left;
   border-radius: 15px;
@@ -47,11 +36,17 @@
 }
 
 #main #body #content #container #sub_container .sub_box .content {
-  width: 425px;
-  height: 180px;
   background-color: #d0d0d0;
   float: left;
   border-radius: 15px;
   padding: 20px;
   margin: 15px;
+}
+
+#main #body #content #container #sub_container .sub_box .content a {
+  color: #9F1D35;
+}
+
+#main #body #content #container #sub_container .sub_box .content a:visited {
+  color: #9F1D35;
 }
