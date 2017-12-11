@@ -63,6 +63,10 @@ if($_POST['edit_conference']) {
   $conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_POST['old_name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
   $edit = "true";
 }
+
+if($_POST['cancel']) {
+  header("Location: conference.php?name={$_POST['old_name']}&page=index");
+}
 ?>
 <!DOCTYPE html>
 <html>

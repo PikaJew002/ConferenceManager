@@ -1,26 +1,28 @@
 <?php
 class Conference {
-  
-  private $name = "";
-  private $admin = "";
-  private $location = "";
-  private $startDate = "";
-  private $endDate = "";
-  private $dbConn = null;
 
-  public function __construct($name = "", $admin = "", $location = "", $startDate = "", $endDate = "", $dbConn = null) {
-    if($dbConn != null && $admin != "" && $name != "") {
-      $this->dbConn = $dbConn;
-      $this->name = $name;
-      $this->admin = $admin;
-      $this->setFromDB();
-    } else {
-      $this->name = $name;
-      $this->admin = $admin;
-      $this->location = $location;
-      $this->startDate = $startDate;
-      $this->endDate = $endDate;
-    }
+  private $mysqli;
+  private $name;
+  private $admin;
+  private $location;
+  private $startDate;
+  private $endDate;
+
+  public function __construct($mysqli, $name, $admin = "", $location = "", $startDate = "", $endDate = "") {
+    $this->mysqli = $mysqli;
+    $this->name = $name;
+    $this->admin = $admin;
+    $this->location = $location;
+    $this->startDate = $startDate;
+    $this->endDate = $endDate;
+  }
+
+  public function getConference() {
+
+  }
+
+  public function editConference() {
+
   }
 
   private function setFromDB() {

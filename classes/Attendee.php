@@ -15,7 +15,7 @@ class Attendee {
     $this->email = $this->mysqli->real_escape_string($email);
     $this->firstName = $this->mysqli->real_escape_string($firstName);
     $this->lastName = $this->mysqli->real_escape_string($lastName);
-    $this->confName = $this->mysqli->real_escape_string($confName);
+    $this->confName = $confName;
     $this->card = $card;
     $this->isCheckedIn = $isCheckedIn;
   }
@@ -35,7 +35,7 @@ class Attendee {
   }
 
   public function addAttendee() {
-    if($this->mysqli->query("INSERT INTO attendees (eanil, first_name, last_name, conf_name, card) VALUES ('{$this->email}', '{$this->firstName}', '{$this->lastName}', '{$this->confName}', '{$this->card}')")) {
+    if($this->mysqli->query("INSERT INTO attendees (email, first_name, last_name, conf_name, card) VALUES ('{$this->email}', '{$this->firstName}', '{$this->lastName}', '{$this->confName}', '{$this->card}')")) {
       # INSERT query successful
       return true;
     } else { #  INSERT query failed

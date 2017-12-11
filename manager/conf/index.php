@@ -20,7 +20,7 @@
           End Date: <br>
             <input type="date" name="new_end_date" value="<?php echo $conf['date_end']; ?>">
             <input type="hidden" name="old_end_date" value="<?php echo $conf['date_end']; ?>"><br><br>
-            <input type="submit" name="edit_conference" value="Submit Changes"><br>
+            <input type="submit" name="edit_conference" value="Submit Changes"> <input type="submit" name="cancel" value="Cancel"><br>
             <?php echo $msg; ?>
           </form>
           <?php } else {

@@ -39,10 +39,10 @@ class Card {
   # Adds new Card to the database with the info specified
   public function addCard(): bool {
     if($this->id == 0) { #  Card doesn't exist yet
-      if($this->mysqli->query("INSERT INTO cards (card_num, name, billing_address, exp, security_code) VALUES ('{$this->cardNum}', '{$this->name}', '{$this->billingAddress}', '{$this->exp}', '{$this->securityCode}')")) {
+      if($result = $this->mysqli->query("INSERT INTO cards (card_num, name, billing_address, exp, security_code) VALUES ('{$this->cardNum}', '{$this->name}', '{$this->billingAddress}', '{$this->exp}', '{$this->securityCode}')")) {
         # INSERT query successful
         $lastEntry = $this->mysqli->query("SELECT max(id) FROM cards")->fetch_assoc();
-        $this->id = $lastEntry['id'];
+        $this->id = $lastEntry['max(id)'];
         return true;
       } else { #  INSERT query failed
         return false;
@@ -55,6 +55,15 @@ class Card {
   # Get functions: return value of property, only included ones that are used
   public function getId() {
     return $this->id;
+  }
+
+  public function getCardNum() {
+    return $this->cardNum;
+  }
+
+  # Set functions: sets value of property, only includes ones that are nessecary
+  public function setId($id) {
+    $this->id = $id;
   }
 }
 ?>

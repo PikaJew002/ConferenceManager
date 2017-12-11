@@ -1,24 +1,62 @@
 <?php
 class Researcher {
 
+  private $mysqli;
+  private $email;
+  private $password;
+  private $firstName;
+  private $lastName;
   private $confName;
   private $phone;
-  private $isRSVP;
+  private $isCheckedIn;
 
-  public function __construct($mysqli, $email, $password, $confName = "", $firstName = "", $lastName = "", $phone = "") {
-    parent::__construct($mysqli, "reviewers", $email, $password); # verifies login and sets first and last name
+  public function __construct($mysqli, $email, $password = "", $firstName = "", $lastName = "", $confName = "", $phone = "", $isCheckedIn = 0) {
+    $this->mysqli = $mysqli;
+    $this->email = $this->mysqli->real_escape_string($email);
+    $this->password = password_hash($password, PASSWORD_DEFAULT);
+    $this->firstName = $this->mysqli->real_escape_string($firstName);
+    $this->lastName = $this->mysqli->real_escape_string($lastName);
+    $this->confName = $confName;
+    if($phone == "") {
+      $this->phone = null;
+    } else {
+      $this->phone = $phone;
+    }
+    $this->isCheckedIn = $isCheckedIn;
+  }
 
-    if($this->doesExist() && $this->isLoggedIn()) {
-      $this->populate();
+  public function getResearcher($mysqli = null, $inputEmail = "") {
+    if(!empty($inputEmail)) {
+      $email = $inputEmail;
+      $this->mysqli = $mysqli;
+    } else {
+      $email = $this->email;
+    }
+    $result = $this->mysqli->query("SELECT * FROM researchers WHERE email='{$email}'");
+    if($result->num_rows == 1) { #  Researcher exists in database
+      $researcher = $result->fetch_assoc();
+      $this->firstName = $researcher['first_name'];
+      $this->lastName = $researcher['last_name'];
+      $this->confName = $researcher['conf_name'];
+      $this->phone = $researcher['phone'];
+      $this->isCheckedIn = $researcher['is_checked_in'];
+      return true;
+    } else { #  Researcher doesn't exist yet
+      return false;
     }
   }
 
-  private function populate() {
-    $result = $this->mysqli->query("SELECT * FROM {$this->tblName} WHERE email='{$this->email}'");
-    $researcher = $result->fetch_assoc();
-    $this->confName = $researcher['conf_name'];
-    $this->phone = $researcher['phone'];
-    $this->isRSVP = (bool) $researcher['is_rsvp'];
+  public function addResearcher() {
+    if($this->mysqli->query("INSERT INTO researchers (email, conf_name, password, first_name, last_name, phone) VALUES ('{$this->email}', '{$this->confName}', '{$this->password}', '{$this->firstName}', '{$this->lastName}', '{$this->phone}')")) {
+      # INSERT query successful
+      return true;
+    } else { #  INSERT query failed
+      return false;
+    }
+  }
+
+  public function checkIn() {
+
   }
 }
 ?>

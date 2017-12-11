@@ -1,8 +1,14 @@
     <div id="container">
-      <div id="content_panel" style="float: none;">
-        <p style="font-size: 14px; margin-left: 10px; margin-bottom: 0px;">
-          Register as an attendee for the <?php echo $conf['name']; ?> here!
-        </p>
+      <div id="content_panel">
+        <?php if(!empty($registered)) { ?>
+          <p style="font-size: 14px; margin-left: 10px; margin-bottom: 0px;">
+            Registration successful! See you at the conference!
+          </p>
+        <?php } else { ?>
+          <p style="font-size: 14px; margin-left: 10px; margin-bottom: 0px;">
+            Register as an attendee for the <?php echo $conf['name']; ?> here!
+          </p>
+        <?php } ?>
         <form action="conference.php" method="post"<?php echo (!empty($registered) ? " hidden" : ""); ?>>
           <input type="hidden" name="conf_name" value="<?php echo $conf['name']; ?>">
           <input type="hidden" name="page_name" value="<?php echo $page; ?>">
