@@ -1,8 +1,17 @@
 <?php
 session_start();
 $page = $_GET['page'];
-require("inc/conn.php");
-require("manager/inc/classes.php");
+require("inc/conn.php"); #  Database connection file
+
+# Class definition files
+require("classes/Login.php");
+require("classes/Admin.php");
+require("classes/Attendee.php");
+require("classes/Card.php");
+require("classes/Conference.php");
+require("classes/Researcher.php");
+require("classes/Reviewer.php");
+
 
 if($_POST['login']) {
   # check for empty fields

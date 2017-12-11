@@ -2,6 +2,16 @@
 session_start();
 require("inc/conn.php"); # this is a protected page, must be logged in
 require("inc/auth.php"); # database connection required
+
+# Class definition files
+require("../classes/Login.php");
+require("../classes/Admin.php");
+require("../classes/Attendee.php");
+require("../classes/Card.php");
+require("../classes/Conference.php");
+require("../classes/Researcher.php");
+require("../classes/Reviewer.php");
+
 $userData = $mysqli->query("SELECT * FROM admin_users WHERE email=\"".$_SESSION['id']."\"")->fetch_assoc(); # get admin user data from session
 $page = $_GET['page']; # gets the page to include
 $content = $_GET['content'];

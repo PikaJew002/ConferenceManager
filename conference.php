@@ -2,11 +2,20 @@
 session_start();
 require("inc/conn.php"); # database connection required
 
-if($_GET['name']) {
+# Class definition files
+require("classes/Login.php");
+require("classes/Admin.php");
+require("classes/Attendee.php");
+require("classes/Card.php");
+require("classes/Conference.php");
+require("classes/Researcher.php");
+require("classes/Reviewer.php");
+
+if(isset($_GET['name'])) {
   $conf = $mysqli->real_escape_string($_GET['name']);
   $conf = $mysqli->query("SELECT * FROM conferences WHERE name='{$conf}'")->fetch_assoc(); # get conference data from database from URL conference name
 }
-if($_GET['page']) {
+if(isset($_GET['page'])) {
   $page = $_GET['page']; # get page to include from URL
 }
 $msg = ""; # default: there are not error messages
@@ -20,17 +29,28 @@ if($_POST['register_attendee']) {
     if(!empty($_POST['number']) && !empty($_POST['name_card']) && !empty($_POST['billing_address']) && !empty($_POST['exp_date']) && !empty($_POST['sec_code'])) {
       # add more validation if time allows
 
+      # add card to the database
+      $card = new Card($mysqli, 0, $_POST['number'], $_POST['name_card'], $_POST['billing_address'], $_POST['exp_date'], $_POST['sec_code']);
+      $card->addCard();
+      $msg = "Card works";
       # add attendee to the database
-      $attendee = new Attendee($mysqli, 0, $_POST['name_card'], $_POST['name_card']);
+      /*$attendee = new Attendee($mysqli, 0, $_POST['email'], $_POST['first_name'], $_POST['last_name'], $_POST['conf_name'], $card->getId());
+      # check attendee was added
+      if($attendee->addAttendee()) {
+        $registered = true;
+        $msg = "";
+      } else {
+        $msg = "There was a database error";
+      }
+      */
     } else {
       $msg = "You have empty fields in the credit card information section. Make sure all fields are filled in!";
     }
   } else {
     $msg = "You have empty fields in the personal information section. Make sure all fields are filled in!";
   }
-  $page = "index";
-  $conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_POST['old_name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
-  $edit = "true";
+  $page = "register";
+  $conf = $mysqli->query("SELECT * FROM conferences WHERE name='{$_POST['conf_name']}'")->fetch_assoc(); # get conference data from database from URL conference name
 }
 ?>
 <!DOCTYPE html>
@@ -64,6 +84,7 @@ if($_POST['register_attendee']) {
       <a href="conference.php?name=<?php echo $conf['name']; ?>&page=register">Registration</a>
       <a href="conference.php?name=<?php echo $conf['name']; ?>&page=researcher">Researcher</a>
       <a href="conference.php?name=<?php echo $conf['name']; ?>&page=reviewer">Reviewer</a>
+      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=checkin">Checkin</a>
       <a href="index.php?page=conferences">Back to Conferences</a>
     </div>
     <div id="content">

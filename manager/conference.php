@@ -2,6 +2,16 @@
 session_start();
 require("inc/conn.php"); # database connection required
 require("inc/auth.php"); # this is a protected page, must be logged in
+
+# Class definition files
+require("../classes/Login.php");
+require("../classes/Admin.php");
+require("../classes/Attendee.php");
+require("../classes/Card.php");
+require("../classes/Conference.php");
+require("../classes/Researcher.php");
+require("../classes/Reviewer.php");
+
 $userData = $mysqli->query("SELECT * FROM admin_users WHERE email=\"".$_SESSION['id']."\"")->fetch_assoc(); # get admin user data from session
 if($_GET['name']) {
   $conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_GET['name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
