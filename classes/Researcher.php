@@ -9,6 +9,7 @@ class Researcher {
   private $confName;
   private $phone;
   private $isCheckedIn;
+  private $papers = [];
 
   public function __construct($mysqli, $email, $password = "", $firstName = "", $lastName = "", $confName = "", $phone = "", $isCheckedIn = 0) {
     $this->mysqli = $mysqli;
@@ -25,14 +26,8 @@ class Researcher {
     $this->isCheckedIn = $isCheckedIn;
   }
 
-  public function getResearcher($mysqli = null, $inputEmail = "") {
-    if(!empty($inputEmail)) {
-      $email = $inputEmail;
-      $this->mysqli = $mysqli;
-    } else {
-      $email = $this->email;
-    }
-    $result = $this->mysqli->query("SELECT * FROM researchers WHERE email='{$email}'");
+  public function getResearcher() {
+    $result = $this->mysqli->query("SELECT * FROM researchers WHERE email='{$this->email}'");
     if($result->num_rows == 1) { #  Researcher exists in database
       $researcher = $result->fetch_assoc();
       $this->firstName = $researcher['first_name'];
@@ -57,6 +52,18 @@ class Researcher {
 
   public function checkIn() {
 
+  }
+
+  public function getPapers() {
+    $result = $this->mysqli->query("SELECT * FROM papers WHERE researcher_email='{$this->email}'");
+    if($result->num_rows > 0) {
+      while($row = $result->fetch_assoc()) {
+        $this->papers[] = $row;
+      }
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 ?>

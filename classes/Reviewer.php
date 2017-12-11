@@ -25,14 +25,8 @@ class Reviewer {
     $this->isAuth = $isAuth;
   }
 
-  public function getReviewer($mysqli = null, $inputEmail = "") {
-    if((!empty($inputEmail)) && ($mysqli != null)) {
-      $email = $inputEmail;
-      $this->mysqli = $mysqli;
-    } else {
-      $email = $this->email;
-    }
-    $result = $this->mysqli->query("SELECT * FROM reviewers WHERE email='{$email}'");
+  public function getReviewer() {
+    $result = $this->mysqli->query("SELECT * FROM reviewers WHERE email='{$this->email}'");
     if($result->num_rows == 1) { #  Researcher exists in database
       $reviewer = $result->fetch_assoc();
       $this->firstName = $reviewer['first_name'];
@@ -57,6 +51,10 @@ class Reviewer {
 
   public function authenticate() {
 
+  }
+
+  public function getIsAuth() {
+    return $this->isAuth;
   }
 }
 ?>

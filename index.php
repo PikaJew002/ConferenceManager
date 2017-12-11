@@ -23,13 +23,20 @@ if($_POST['login']) {
       if($user->doesExist()) {
         # check if email and password match
         if($user->isLoggedIn()) {
-          # login successful,
-          $_SESSION['id'] = $user->getEmail();
-          if($_POST['user_type'] == "admin_users") {
+          if($_POST['user_type'] == "admin_users") { #  if admin, login successful
+            $_SESSION['id'] = $user->getEmail();
             header("Location: manager/index.php");
-          } else if($_POST['user_type'] == "reviewers") {
-            header("Location: reviewer/index.php");
-          } else {
+          } else if($_POST['user_type'] == "reviewers") { # if rveviewer, check authentication status
+            $reviewer = new Reviewer($mysqli, $user->getEmail());
+            $reviewer->getReviewer();
+            if($reviewer->getIsAuth() == 1) { # if reviewer is authenticated, login successful
+              $_SESSION['id'] = $user->getEmail();
+              header("Location: reviewer/index.php");
+            } else {
+              header("Location index.php?login&error_msg=not_auth");
+            }
+          } else { # (else) if researcher, login successful
+            $_SESSION['id'] = $user->getEmail();
             header("Location: researcher/index.php");
           }
         } else {
@@ -44,7 +51,6 @@ if($_POST['login']) {
   } else {
     header("Location: index.php?page=login&error_msg=fields_empty");
   }
-
 }
 ?>
 <!DOCTYPE html>
