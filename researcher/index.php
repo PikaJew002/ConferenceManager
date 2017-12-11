@@ -11,9 +11,13 @@ require("../classes/Card.php");
 require("../classes/Conference.php");
 require("../classes/Researcher.php");
 require("../classes/Reviewer.php");
+require("../classes/Paper.php");
+require("../classes/Review.php");
 
 $researcher = new Researcher($mysqli, $_SESSION['id']);
-$researcher->getResearcher();
+if($researcher->getResearcher()) {
+
+}
 if($_GET['page']) {
   $page = $_GET['page']; # get page to include from URL
 }
@@ -24,40 +28,35 @@ $msg = ""; # default: there are not error messages
 
 /******* if a submit button was pressed *******/
 #  In case of any form submission,
-if($_POST['edit_conference']) {
-  #check for any empty fields
-  if(!empty($_POST['new_name']) && !empty($_POST['new_location']) && !empty($_POST['new_start_date']) && !empty($_POST['new_end_date'])) {
-    #check if name is changed
-    $newName = $mysqli->real_escape_string($_POST['new_name']);
-    $newLocation = $mysqli->real_escape_string($_POST['new_location']);
-    $newStartDate = $mysqli->real_escape_string($_POST['new_start_date']);
-    $newEndDate = $mysqli->real_escape_string($_POST['new_end_date']);
-    $oldName = $_POST['old_name'];
-    $email = $_SESSION['id'];
-    if($_POST['old_name'] != $_POST['new_name']) {
-      $query = "SELECT * from conferences WHERE name=\"".$mysqli->real_escape_string($_POST['new_name'])."\" AND admin_email=\"".$_SESSION['id']."\"";
-      $results = $mysqli->query($query);
-      #check if new name is unused
-      if($results->num_rows == 0) {
-        $updateQuery = "UPDATE conferences SET name='$newName', location='$newLocation', date_start='$newStartDate', date_end='$newEndDate' WHERE name='$oldName' AND admin_email='$email'";
-        $update = $mysqli->query($updateQuery);
-        if($update) {
-          header("Location: conference.php?name=".$newName."&page=index");
+if($_POST['upload_paper']) {
+  # check for any empty fields
+  if(!empty($_POST['title']) && !empty($_POST['abstract'])) {
+    # check title isn't taken
+    $paper = new Paper($mysqli, $_POST['title'], $_SESSION['id'], $_POST['abstract'], "papers/".md5($_POST['title']).".pdf");
+    if(!$paper->getPaper()) {
+      # upload file
+      if(is_uploaded_file($_FILES['paper']['tmp_name'])) {
+        $fileName = "../papers/".md5($_POST['title']).".pdf";
+        if(move_uploaded_file($_FILES['paper']['tmp_name'], $fileName)) {
+          if($paper->addPaper()) {
+            $uploaded = true;
+            $msg = "Paper was submitted and uploaded successfully!";
+          } else {
+            $msg = "Database error. Check error logs.";
+          }
+        } else {
+          $msg = "File couldn't be moved.";
         }
       } else {
-        $msg = "The new name you gave for the conference is already in use! Please choose another one.";
+        $msg = "File was not uploaded. Please try again.";
       }
     } else {
-      $updateQuery = "UPDATE conferences SET location='$newLocation', date_start='$newStartDate', date_end='$newEndDate' WHERE name='$oldName' AND admin_email='$email'";
-      $update = $mysqli->query($updateQuery);
-      if($update) {
-        header("Location: conference.php?name=".$newName."&page=index");
-      }
+      $msg = "A paper already exists with that title. Have you already submitted this paper before?";
     }
   } else {
-    $msg = "Make sure all fields are filled in (this includes starting and ending dates)!";
+    $msg = "Make sure all fields are filled in!";
   }
-  $page = "index";
+  $page = "papers";
   $conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_POST['old_name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
   $edit = "true";
 }
@@ -89,24 +88,24 @@ if($_POST['cancel']) {
 <body>
 <div id="main">
   <div id="header">
-    <h1><?php echo $conf['name']; ?></h1>
+    <h1><?php echo $researcher->getConfName(); ?></h1>
     <p>
-      <em>Hello, <?php echo $userData['first_name']; ?>.</em>
+      <em>Hello, <?php echo $researcher->getFirstName(); ?>.</em>
     </p>
   </div>
   <div id="body">
     <div id="nav">
-      <a href="?page=index">Papers</a>
-      <a href="?page=papers">Submit Paper</a>
-      <a href="?page=reviewers">Profile</a>
-      <a href="?page=logout">Logout</a>
+      <a href="index.php?page=index">Papers</a>
+      <a href="index.php?page=papers">Submit Paper</a>
+      <a href="index.php?page=reviewers">Profile</a>
+      <a href="index.php?page=logout">Logout</a>
     </div>
     <div id="content">
 <?php
 if($page) {
 	if(!strpos($page,".")&&!strpos($page,"/")) {
-		if(file_exists("conf/".$page.".php")) {
-			include("conf/".$page.".php");
+		if(file_exists("inc/".$page.".php")) {
+			include("inc/".$page.".php");
 		} else {
 			echo "Sorry, that page does not exist.<br />";
 		}
@@ -114,7 +113,7 @@ if($page) {
 		echo "Not allowed!";
 	}
 } else {
-	include("conf/index.php");
+	include("inc/index.php");
 }
 ?>
     </div>

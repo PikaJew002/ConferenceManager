@@ -60,10 +60,30 @@ class Researcher {
       while($row = $result->fetch_assoc()) {
         $this->papers[] = $row;
       }
-      return true;
+      return $this->papers;
     } else {
-      return false;
+      return array();
     }
+  }
+
+  public function returnPapers() {
+    return $this->papers;
+  }
+
+  public function getEmail() {
+    return $this->email;
+  }
+
+  public function getConfName() {
+    return $this->confName;
+  }
+
+  public function getFirstName() {
+    return $this->firstName;
+  }
+
+  public function getLastName() {
+    return $this->lastName;
   }
 }
 ?>

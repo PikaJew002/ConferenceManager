@@ -11,57 +11,34 @@ require("../classes/Card.php");
 require("../classes/Conference.php");
 require("../classes/Researcher.php");
 require("../classes/Reviewer.php");
+require("../classes/Paper.php");
+require("../classes/Review.php");
 
-$userData = $mysqli->query("SELECT * FROM admin_users WHERE email=\"".$_SESSION['id']."\"")->fetch_assoc(); # get admin user data from session
-if($_GET['name']) {
+$reviewer = new Reviewer($mysqli, $_SESSION['id']);
+$reviewer->getReviewer();
+$conference = new Conference($mysqli, $reviewer->getConfName());
+$conference->getConference();
+if(isset($_GET['name'])) {
   $conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_GET['name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
 }
-if($_GET['page']) {
+if(isset($_GET['page'])) {
   $page = $_GET['page']; # get page to include from URL
 }
-if($_GET['edit']) {
+if(isset($_GET['edit'])) {
   $edit = $_GET['edit']; # is the conference being edited?
 }
 $msg = ""; # default: there are not error messages
 
-/******* if the save changes/edit_conference submit button was pressed *******/
-#  In this case, the conference name, page, nor edit are not set via url, need to be set manually if validation is not passed or update query unsuccessful
-if($_POST['edit_conference']) {
-  #check for any empty fields
-  if(!empty($_POST['new_name']) && !empty($_POST['new_location']) && !empty($_POST['new_start_date']) && !empty($_POST['new_end_date'])) {
-    #check if name is changed
-    $newName = $mysqli->real_escape_string($_POST['new_name']);
-    $newLocation = $mysqli->real_escape_string($_POST['new_location']);
-    $newStartDate = $mysqli->real_escape_string($_POST['new_start_date']);
-    $newEndDate = $mysqli->real_escape_string($_POST['new_end_date']);
-    $oldName = $_POST['old_name'];
-    $email = $_SESSION['id'];
-    if($_POST['old_name'] != $_POST['new_name']) {
-      $query = "SELECT * from conferences WHERE name=\"".$mysqli->real_escape_string($_POST['new_name'])."\" AND admin_email=\"".$_SESSION['id']."\"";
-      $results = $mysqli->query($query);
-      #check if new name is unused
-      if($results->num_rows == 0) {
-        $updateQuery = "UPDATE conferences SET name='$newName', location='$newLocation', date_start='$newStartDate', date_end='$newEndDate' WHERE name='$oldName' AND admin_email='$email'";
-        $update = $mysqli->query($updateQuery);
-        if($update) {
-          header("Location: conference.php?name=".$newName."&page=index");
-        }
-      } else {
-        $msg = "The new name you gave for the conference is already in use! Please choose another one.";
-      }
-    } else {
-      $updateQuery = "UPDATE conferences SET location='$newLocation', date_start='$newStartDate', date_end='$newEndDate' WHERE name='$oldName' AND admin_email='$email'";
-      $update = $mysqli->query($updateQuery);
-      if($update) {
-        header("Location: conference.php?name=".$newName."&page=index");
-      }
-    }
+/******* if a submit button was pressed *******/
+#  In this case,
+if(isset($_POST['bid_paper'])) {
+  $review = new Review($mysqli, $_POST['title'], $_SESSION['id']);
+  if($review->addReview()) {
+    header("Location: index.php?");
   } else {
-    $msg = "Make sure all fields are filled in (this includes starting and ending dates)!";
+    header("Location: ");
   }
   $page = "index";
-  $conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_POST['old_name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
-  $edit = "true";
 }
 
 if($_POST['cancel']) {
@@ -91,24 +68,23 @@ if($_POST['cancel']) {
 <body>
 <div id="main">
   <div id="header">
-    <h1><?php echo $conf['name']; ?></h1>
+    <h1><?php echo $conference->getName(); ?></h1>
     <p>
-      <em>Hello, <?php echo $userData['first_name']; ?>.</em>
+      <em>Hello, <?php echo $reviewer->getFirstName(); ?>.</em>
     </p>
   </div>
   <div id="body">
     <div id="nav">
-      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=index">Overview</a>
-      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=papers">Papers Submitted</a>
-      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=reviewers">Paper Reviewers</a>
-      <a href="index.php">Back to Conferences</a>
+      <a href="index.php?page=index">Papers Submitted</a>
+      <a href="index.php?page=review">Submit Review</a>
+      <a href="index.php?page=logout">Logout</a>
     </div>
     <div id="content">
 <?php
 if($page) {
 	if(!strpos($page,".")&&!strpos($page,"/")) {
-		if(file_exists("conf/".$page.".php")) {
-			include("conf/".$page.".php");
+		if(file_exists("inc/".$page.".php")) {
+			include("inc/".$page.".php");
 		} else {
 			echo "Sorry, that page does not exist.<br />";
 		}
@@ -116,7 +92,7 @@ if($page) {
 		echo "Not allowed!";
 	}
 } else {
-	include("conf/index.php");
+	include("inc/index.php");
 }
 ?>
     </div>

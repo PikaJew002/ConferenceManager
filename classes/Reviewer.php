@@ -53,8 +53,16 @@ class Reviewer {
 
   }
 
+  public function getConfName() {
+    return $this->confName;
+  }
+
   public function getIsAuth() {
     return $this->isAuth;
+  }
+
+  public function getFirstName() {
+    return $this->firstName;
   }
 }
 ?>

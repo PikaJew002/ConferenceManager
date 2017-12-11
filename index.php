@@ -11,6 +11,8 @@ require("classes/Card.php");
 require("classes/Conference.php");
 require("classes/Researcher.php");
 require("classes/Reviewer.php");
+require("classes/Paper.php");
+require("classes/Review.php");
 
 
 if($_POST['login']) {

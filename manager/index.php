@@ -11,6 +11,8 @@ require("../classes/Card.php");
 require("../classes/Conference.php");
 require("../classes/Researcher.php");
 require("../classes/Reviewer.php");
+require("../classes/Paper.php");
+require("../classes/Review.php");
 
 $userData = $mysqli->query("SELECT * FROM admin_users WHERE email=\"".$_SESSION['id']."\"")->fetch_assoc(); # get admin user data from session
 $page = $_GET['page']; # gets the page to include
