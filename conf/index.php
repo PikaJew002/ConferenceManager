@@ -1,12 +1,12 @@
 <?php
-$startDate = explode("-", $conf['date_start']);
-$endDate = explode("-", $conf['date_end']);
+$startDate = explode("-", $conf->getStartDate());
+$endDate = explode("-", $conf->getEndDate());
 ?>
     <div id="container">
       <div id="content_panel">
         <h1>About the Conference</h1>
         <p style="font-size: 14px;">
-          The conference will be held at <?php echo $conf['location']; ?>
+          The conference will be held at <?php echo $conf->getLocation() ?>
           and will feature some of the top researchers in the field presenting
           their research at sessions thoughout the weekend
           (<?php echo $startDate[1]."/".$startDate[2]."/".$startDate[0]; ?> to

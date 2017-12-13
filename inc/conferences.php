@@ -1,7 +1,4 @@
-<?php
-$query = "SELECT * FROM conferences";
-$result = $mysqli->query($query);
-?>
+
       <div id="container">
         <div id="sub_container">
 <?php
@@ -25,7 +22,7 @@ if($result = $mysqli->query($query)) {
             </div>
           </div>
 <?php
-}
+  }
 }
 ?>
         </div>

@@ -7,13 +7,13 @@
           </p>
         <?php } else { ?>
           <p style="font-size: 14px; margin-left: 10px; margin-bottom: 0px;">
-            Register as an reviewer for the <?php echo $conf['name']; ?> here!<br>
+            Register as an reviewer for the <?php echo $conf->getName(); ?> here!<br>
             After registering, pending authentication by an admin user, you'll
             be able to review papers (minimum of 3, maximum of 7).
           </p>
         <?php } ?>
         <form action="conference.php" method="post"<?php echo (!empty($registered) ? " hidden" : ""); ?>>
-          <input type="hidden" name="conf_name" value="<?php echo $conf['name']; ?>">
+          <input type="hidden" name="conf_name" value="<?php echo $conf->getName(); ?>">
           <input type="hidden" name="page_name" value="<?php echo $page; ?>">
           <div id="content_attendee" style="float: left; margin: 10px; width: 250px;">
             <h2>Reviwer Information</h2>

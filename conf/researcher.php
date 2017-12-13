@@ -6,13 +6,13 @@
           </p>
         <?php } else { ?>
           <p style="font-size: 14px; margin-left: 10px; margin-bottom: 0px;">
-            Register as an researcher for the <?php echo $conf['name']; ?> here!<br>
+            Register as an researcher for the <?php echo $conf->getName(); ?> here!<br>
             After registering, you'll be able to submit papers to present at the
             conference, pending review and approval.
           </p>
         <?php } ?>
         <form action="conference.php" method="post"<?php echo (!empty($registered) ? " hidden" : ""); ?>>
-          <input type="hidden" name="conf_name" value="<?php echo $conf['name']; ?>">
+          <input type="hidden" name="conf_name" value="<?php echo $conf->getName(); ?>">
           <input type="hidden" name="page_name" value="<?php echo $page; ?>">
           <div id="content_attendee" style="float: left; margin: 10px; width: 250px;">
             <h2>Researcher Information</h2>

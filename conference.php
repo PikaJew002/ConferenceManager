@@ -12,8 +12,8 @@ require("classes/Researcher.php");
 require("classes/Reviewer.php");
 
 if(isset($_GET['name'])) {
-  $conf = $mysqli->real_escape_string($_GET['name']);
-  $conf = $mysqli->query("SELECT * FROM conferences WHERE name='{$conf}'")->fetch_assoc(); # get conference data from database from URL conference name
+  $conf = new Conference($mysqli, $_GET['name']);
+  $conf->getConference();
 }
 if(isset($_GET['page'])) {
   $page = $_GET['page']; # get page to include from URL
@@ -54,63 +54,82 @@ if($_POST['register_attendee']) {
     $msg = "You have empty fields in the personal information section. Make sure all fields are filled in!";
   }
   $page = "register";
-  $conf = $mysqli->query("SELECT * FROM conferences WHERE name='{$_POST['conf_name']}'")->fetch_assoc(); # get conference data from database from URL conference name
+  $conf = new Conference($mysqli, $_POST['conf_name']);
+  $conf->getConference();
 }
 
 if($_POST['register_researcher']) {
   # check for empty required fields
   if(!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['confirm_password']) &&!empty($_POST['first_name']) && !empty($_POST['last_name'])) {
-    # add more validation if time allows
-    $researcher = new Researcher($mysqli, $_POST['email'], $_POST['password'], $_POST['first_name'], $_POST['last_name'], $_POST['conf_name'], $_POST['phone']);
-    # check if researcher does not already exist
-    if(!$researcher->getResearcher()) {
-      # check that password and confirm password
-      if($_POST['password'] == $_POST['confirm_password']) {
-      # add attendee to the database
-        if($researcher->addResearcher()) {
-          $registered = true;
+    # check that password and confirm password
+    if($_POST['password'] == $_POST['confirm_password']) {
+      /*
+          Check for valid email and password
+          Email: 5-255 characters: a-z, 0-9, {_-.} before the @, same after the @ before the ., 2 or 3 a-z after the .
+          Password: min 3 characters: a-z, A-Z, 0-9, {.!%&*_-}
+      */
+      if(Login::isValidEmail($_POST['email']) && Login::isValidPassword($_POST['password'])) {
+        $researcher = new Researcher($mysqli, $_POST['email'], $_POST['password'], $_POST['first_name'], $_POST['last_name'], $_POST['conf_name'], $_POST['phone']);
+        # check if researcher does not already exist
+        if(!$researcher->getResearcher()) {
+          # add researcher to the database
+          if($researcher->addResearcher()) {
+            $registered = true;
+          } else {
+            $msg = "Database error when adding the researcher";
+          }
         } else {
-          $msg = "Database error when adding the researcher";
+          $msg = "A researcher with that email already exists.";
         }
       } else {
-        $msg = "The passwords don't match. Make sure your password and confirm passord match.";
+        $msg = "Either the email or password are not valid. Please use a valid email and password.";
       }
     } else {
-      $msg = "A researcher with that email already exists.";
+      $msg = "The passwords don't match. Make sure your password and confirm passord match.";
     }
   } else {
     $msg = "You have empty required fields. Make sure all required fields are filled in!";
   }
   $page = "researcher";
-  $conf = $mysqli->query("SELECT * FROM conferences WHERE name='{$_POST['conf_name']}'")->fetch_assoc(); # get conference data from database from URL conference name
+  $conf = new Conference($mysqli, $_POST['conf_name']);
+  $conf->getConference();
 }
 
 if($_POST['register_reviewer']) {
   # check for empty required fields
   if(!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['confirm_password']) &&!empty($_POST['first_name']) && !empty($_POST['last_name'])) {
-    # add more validation if time allows
-    $reviewer = new Reviewer($mysqli, $_POST['email'], $_POST['password'], $_POST['first_name'], $_POST['last_name'], $_POST['conf_name'], $_POST['phone']);
-    # check if researcher does not already exist
-    if(!$reviewer->getReviewer()) {
-      # check that password and confirm password
-      if($_POST['password'] == $_POST['confirm_password']) {
-      # add attendee to the database
-        if($reviewer->addReviewer()) {
-          $registered = true;
+    # check that password and confirm password
+    if($_POST['password'] == $_POST['confirm_password']) {
+    /*
+        Check for valid email and password
+        Email: 5-255 characters: a-z, 0-9, {_-.} before the @, same after the @ before the ., 2 or 3 a-z after the .
+        Password: min 3 characters: a-z, A-Z, 0-9, {.!%&*_-}
+    */
+      if(Login::isValidEmail($_POST['email']) && Login::isValidPassword($_POST['password'])) {
+        $reviewer = new Reviewer($mysqli, $_POST['email'], $_POST['password'], $_POST['first_name'], $_POST['last_name'], $_POST['conf_name'], $_POST['phone']);
+        # check if researcher does not already exist
+        if(!$reviewer->getReviewer()) {
+        # add attendee to the database
+          if($reviewer->addReviewer()) {
+            $registered = true;
+          } else {
+            $msg = "Database error when adding the reviewer";
+          }
         } else {
-          $msg = "Database error when adding the reviewer";
+          $msg = "A reviewer with that email already exists.";
         }
       } else {
-        $msg = "The passwords don't match. Make sure your password and confirm passord match.";
+        $msg = "Either the email or password are not valid. Please use a valid email and password.";
       }
     } else {
-      $msg = "A reviewer with that email already exists.";
+      $msg = "The passwords don't match. Make sure your password and confirm passord match.";
     }
   } else {
     $msg = "You have empty required fields. Make sure all required fields are filled in!";
   }
   $page = "reviewer";
-  $conf = $mysqli->query("SELECT * FROM conferences WHERE name='{$_POST['conf_name']}'")->fetch_assoc(); # get conference data from database from URL conference name
+  $conf = new Conference($mysqli, $_POST['conf_name']);
+  $conf->getConference();
 }
 ?>
 <!DOCTYPE html>
@@ -122,7 +141,7 @@ if($_POST['register_reviewer']) {
   <meta name="Keywords" content="keywords" />
   <meta name="robots" content="all, follow" />
 <!-- title -->
-  <title><?php echo $conf['name']; ?></title>
+  <title><?php echo $conf->getName(); ?></title>
 <!-- css -->
   <link rel="stylesheet" href="style.conference.css" type="text/css" />
   <style>
@@ -136,15 +155,15 @@ if($_POST['register_reviewer']) {
 <body>
 <div id="main">
   <div id="header">
-    <h1><?php echo $conf['name']; ?></h1>
+    <h1><?php echo $conf->getName(); ?></h1>
   </div>
   <div id="body">
     <div id="nav">
-      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=index">About</a>
-      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=register">Registration</a>
-      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=researcher">Researcher</a>
-      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=reviewer">Reviewer</a>
-      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=checkin">Checkin</a>
+      <a href="conference.php?name=<?php echo $conf->getName(); ?>&page=index">About</a>
+      <a href="conference.php?name=<?php echo $conf->getName(); ?>&page=register">Registration</a>
+      <a href="conference.php?name=<?php echo $conf->getName(); ?>&page=researcher">Researcher</a>
+      <a href="conference.php?name=<?php echo $conf->getName(); ?>&page=reviewer">Reviewer</a>
+      <a href="conference.php?name=<?php echo $conf->getName(); ?>&page=checkin">Checkin</a>
       <a href="index.php?page=conferences">Back to Conferences</a>
     </div>
     <div id="content">

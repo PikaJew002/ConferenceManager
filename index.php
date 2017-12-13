@@ -14,41 +14,35 @@ require("classes/Reviewer.php");
 require("classes/Paper.php");
 require("classes/Review.php");
 
-
 if($_POST['login']) {
   # check for empty fields
   if(!empty($_POST['email']) && !empty($_POST['password'])) {
-    # check for valid email and password
-    if((Login::isValidEmail($_POST['email'])) && (Login::isValidPassword($_POST['password']))) {
-      $user = new Login($mysqli, $_POST['user_type'], $_POST['email'], $_POST['password']); # initialize new Login object
-      # check if email exists
-      if($user->doesExist()) {
-        # check if email and password match
-        if($user->isLoggedIn()) {
-          if($_POST['user_type'] == "admin_users") { #  if admin, login successful
+    $user = new Login($mysqli, $_POST['user_type'], $_POST['email'], $_POST['password']); # initialize new Login object
+    # check if email exists
+    if($user->doesExist()) {
+      # check if email and password match
+      if($user->isLoggedIn()) {
+        if($_POST['user_type'] == "admin_users") { #  if admin, login successful
+          $_SESSION['id'] = $user->getEmail();
+          header("Location: manager/index.php");
+        } else if($_POST['user_type'] == "reviewers") { # if rveviewer, check authentication status
+          $reviewer = new Reviewer($mysqli, $user->getEmail());
+          $reviewer->getReviewer();
+          if($reviewer->getIsAuth() == 1) { # if reviewer is authenticated, login successful
             $_SESSION['id'] = $user->getEmail();
-            header("Location: manager/index.php");
-          } else if($_POST['user_type'] == "reviewers") { # if rveviewer, check authentication status
-            $reviewer = new Reviewer($mysqli, $user->getEmail());
-            $reviewer->getReviewer();
-            if($reviewer->getIsAuth() == 1) { # if reviewer is authenticated, login successful
-              $_SESSION['id'] = $user->getEmail();
-              header("Location: reviewer/index.php");
-            } else {
-              header("Location index.php?login&error_msg=not_auth");
-            }
-          } else { # (else) if researcher, login successful
-            $_SESSION['id'] = $user->getEmail();
-            header("Location: researcher/index.php");
+            header("Location: reviewer/index.php");
+          } else {
+            header("Location index.php?login&error_msg=not_auth");
           }
-        } else {
-          header("Location: index.php?page=login&error_msg=email_password_no_match");
+        } else { # (else) if researcher, login successful
+          $_SESSION['id'] = $user->getEmail();
+          header("Location: researcher/index.php");
         }
       } else {
-        header("Location: index.php?page=login&error_msg=email_not_found");
+        header("Location: index.php?page=login&error_msg=email_password_no_match");
       }
     } else {
-      header("Location: index.php?page=login&error_msg=email_or_password_not_valid");
+      header("Location: index.php?page=login&error_msg=email_not_found");
     }
   } else {
     header("Location: index.php?page=login&error_msg=fields_empty");

@@ -28,6 +28,7 @@ if(isset($_GET['edit'])) {
   $edit = $_GET['edit']; # is the conference being edited?
 }
 $msg = ""; # default: there are not error messages
+$error = false;
 
 /******* if a submit button was pressed *******/
 #  In this case,
@@ -39,6 +40,29 @@ if(isset($_POST['bid_paper'])) {
     header("Location: ");
   }
   $page = "index";
+}
+
+if($_POST['submit_review']) {
+  $page = "review";
+  $title = $_POST['title'];
+  if(!empty($_POST['score'])) {
+    if(isset($_POST['is_recommended']) && $_POST['is_recommended'] == "1") {
+      $recommend = 1;
+    } else {
+      $recommend = 0;
+    }
+    echo $_POST['score']." ".$recommend." ".time();
+    $review = new Review($mysqli, $title, $_SESSION['id']);
+    $review->getReview();
+    if($review->updateReview($_POST['score'], $recommend, time())) {
+      $msg = "Review Submitted!";
+    } else {
+      $msg = "Database error!";
+    }
+  } else {
+    $error = true;
+    $msg = "Please enter a score before submitted a review.";
+  }
 }
 
 if($_POST['cancel']) {
@@ -75,8 +99,8 @@ if($_POST['cancel']) {
   </div>
   <div id="body">
     <div id="nav">
-      <a href="index.php?page=index">Papers Submitted</a>
-      <a href="index.php?page=review">Submit Review</a>
+      <a href="index.php?page=index">Papers</a>
+      <a href="index.php?page=bids">Reviews</a>
       <a href="index.php?page=logout">Logout</a>
     </div>
     <div id="content">

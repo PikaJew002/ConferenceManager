@@ -53,20 +53,6 @@ class Conference {
 
   }
 
-  private function setFromDB() {
-    $query = "SELECT * FROM conferences WHERE name='".$this->name."' AND admin_email='".$this->admin."'";
-    $result = $this->dbConn->query($query);
-    if($result->num_rows != 0) {
-      $conf = $result->fetch_assoc();
-      $this->location = $conf['location'];
-      $this->start_date = $conf['date_start'];
-      $this->end_date = $conf['date_end'];
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   public function getName() {
     return $this->name;
   }

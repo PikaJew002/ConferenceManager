@@ -14,7 +14,7 @@ class Researcher {
   public function __construct($mysqli, $email, $password = "", $firstName = "", $lastName = "", $confName = "", $phone = "", $isCheckedIn = 0) {
     $this->mysqli = $mysqli;
     $this->email = $this->mysqli->real_escape_string($email);
-    $this->password = password_hash($password, PASSWORD_DEFAULT);
+    $this->password = $password;
     $this->firstName = $this->mysqli->real_escape_string($firstName);
     $this->lastName = $this->mysqli->real_escape_string($lastName);
     $this->confName = $confName;
@@ -42,12 +42,44 @@ class Researcher {
   }
 
   public function addResearcher() {
-    if($this->mysqli->query("INSERT INTO researchers (email, conf_name, password, first_name, last_name, phone) VALUES ('{$this->email}', '{$this->confName}', '{$this->password}', '{$this->firstName}', '{$this->lastName}', '{$this->phone}')")) {
+    $password = password_hash($this->password, PASSWORD_DEFAULT);
+    if($this->mysqli->query("INSERT INTO researchers (email, conf_name, password, first_name, last_name, phone) VALUES ('{$this->email}', '{$this->confName}', '{$password}', '{$this->firstName}', '{$this->lastName}', '{$this->phone}')")) {
       # INSERT query successful
       return true;
     } else { #  INSERT query failed
       return false;
     }
+  }
+
+  public function updateResearcher($email = "", $password = "", $firstName = "", $lastName = "", $phone = "") {
+    if(!empty($email)) {
+      $newEmail = $this->mysqli->real_escape_string($email);
+      if($this->mysqli->query("UPDATE researchers SET email='{$newEmail}' WHERE email='{$this->email}'")) {
+        # INSERT query successful
+        return true;
+      } else { #  INSERT query failed
+        return false;
+      }
+    }
+    if(!empty($password)) {
+      $newPassword = password_hash($password, PASSWORD_DEFAULT);
+      if($this->mysqli->query("UPDATE researchers SET password='{$newPassword}' WHERE email='{$this->email}'")) {
+        # INSERT query successful
+        return true;
+      } else { #  INSERT query failed
+        return false;
+      }
+    }
+    $newFirstName = $this->mysqli->real_escape_string($firstName);
+    $newLastName = $this->mysqli->real_escape_string($lastName);
+    $newPhone = $this->mysqli->real_escape_string($phone);
+    if($this->mysqli->query("UPDATE researchers SET first_name='{$newFirstName}', last_name='{$newLastName}', phone='{$newPhone}' WHERE email='{$this->email}'")) {
+      # INSERT query successful
+      return true;
+    } else { #  INSERT query failed
+      return false;
+    }
+    $this->getResearcher();
   }
 
   public function checkIn() {
@@ -72,6 +104,11 @@ class Researcher {
 
   public function getEmail() {
     return $this->email;
+  }
+
+  public function getPasswordHash() {
+    $result = $this->mysqli->query("SELECT password FROM researchers WHERE email='{$this->email}'");
+    return $result->fetch_assoc()['password'];
   }
 
   public function getConfName() {

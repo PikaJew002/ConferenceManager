@@ -4,7 +4,6 @@ class Paper {
   private $mysqli;
   private $title;
   private $researcherEmail;
-  private $researcher;
   private $abstract;
   private $path;
   private $whenSubmitted;
@@ -54,6 +53,10 @@ class Paper {
 
   public function getResearcherEmail() {
     return $this->researcherEmail;
+  }
+
+  public function getIsAccepted() {
+    return $this->isAccepted;
   }
 
   public function getResearcher() {

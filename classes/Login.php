@@ -40,19 +40,26 @@ class Login {
   }
 
   public static function isValidEmail($email): bool {
-    # code later, if time
-    if($email) {
-      return true;
+    # must be 5-255 characters
+    if(strlen($email) >=5 && strlen($email) <= 255) {
+      # valid email address
+      #if(preg_match("^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$", $email)) {
+        return true;
+      # else {
+        #return false;
+      #
+    } else {
+      return false;
     }
-    return false;
   }
 
   public static function isValidPassword($password): bool {
-    # code later, if time
-    if($password) {
+    # must be at least 3 characters
+    if(strlen($password) >=3) {
       return true;
+    } else {
+      return false;
     }
-    return false;
   }
 
   public function doesExist(): bool {

@@ -15,16 +15,14 @@ require("../classes/Paper.php");
 require("../classes/Review.php");
 
 $researcher = new Researcher($mysqli, $_SESSION['id']);
-if($researcher->getResearcher()) {
-
-}
+$researcher->getResearcher();
 if($_GET['page']) {
   $page = $_GET['page']; # get page to include from URL
 }
 if($_GET['edit']) {
   $edit = $_GET['edit']; # is something being edited?
 }
-$msg = ""; # default: there are not error messages
+#$msg = ""; # default: there are not error messages
 
 /******* if a submit button was pressed *******/
 #  In case of any form submission,
@@ -56,13 +54,52 @@ if($_POST['upload_paper']) {
   } else {
     $msg = "Make sure all fields are filled in!";
   }
-  $page = "papers";
+  $page = "index";
   $conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_POST['old_name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
   $edit = "true";
 }
 
+if($_POST['update_researcher']) {
+  $page = "profile";
+  $edit = true;
+  $researcher = new Researcher($mysqli, $_SESSION['id']);
+  $researcher->getResearcher();
+  #  Email is changed
+  if(!empty($_POST['new_email'])) {
+    #  Email is not the same
+    if($_POST['new_email'] != $_POST['old_email']) {
+      #  Check if new email is not taken
+      $checkReseacher = new Researcher($mysqli, $_POST['new_email']);
+      if(!$checkReseacher->getResearcher()) {
+        # Update email
+        $reseacher->updateResearcher($_POST['new_email']);
+        $msg = "Email updated.";
+      } else {
+        $msg = "The new email is already in use. Please choose another one.";
+      }
+    }
+  }
+  #  Password fields are all filled
+  if(!empty($_POST['old_password']) && !empty($_POST['new_password']) && !empty($_POST['confirm_new_password'])) {
+    # Check that new password and confirm new password match
+    if($_POST['new_password'] == $_POST['confirm_new_password']) {
+      # Check that old password matches current password
+      if(password_verify($_POST['old_password'], $this->getPasswordHash())) {
+        # update password
+        $reseacher->updateResearcher("", password_hash($_POST['new_password'], PASSWORD_DEFAULT));
+        $msg = "Password updated.";
+      } else {
+        $msg = $msg."<br>\nThe current password you gave doesn't match the database.";
+      }
+    } else {
+      $msg = $msg."<br>\nThe new password and confirm new password do not match.";
+    }
+  }
+  $researcher->updateResearcher("", "", $_POST['new_first_name'], $_POST['new_last_name'], $_POST['new_phone']);
+}
+
 if($_POST['cancel']) {
-  header("Location: conference.php?name={$_POST['old_name']}&page=index");
+  header("Location: index.php?page=index");
 }
 ?>
 <!DOCTYPE html>
@@ -95,9 +132,9 @@ if($_POST['cancel']) {
   </div>
   <div id="body">
     <div id="nav">
-      <a href="index.php?page=index">Papers</a>
-      <a href="index.php?page=papers">Submit Paper</a>
-      <a href="index.php?page=reviewers">Profile</a>
+      <a href="index.php?page=index">View Papers</a>
+      <a href="index.php?page=submitpaper">Submit Paper</a>
+      <a href="index.php?page=profile">Profile</a>
       <a href="index.php?page=logout">Logout</a>
     </div>
     <div id="content">
