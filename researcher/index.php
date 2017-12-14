@@ -19,9 +19,7 @@ $researcher->getResearcher();
 if($_GET['page']) {
   $page = $_GET['page']; # get page to include from URL
 }
-if($_GET['edit']) {
-  $edit = $_GET['edit']; # is something being edited?
-}
+$edit = ($_GET['edit'] ? true : false); # is something being edited?
 #$msg = ""; # default: there are not error messages
 
 /******* if a submit button was pressed *******/
@@ -59,26 +57,33 @@ if($_POST['upload_paper']) {
   $edit = "true";
 }
 
-if($_POST['update_researcher']) {
-  $page = "profile";
-  $edit = true;
-  $researcher = new Researcher($mysqli, $_SESSION['id']);
-  $researcher->getResearcher();
-  #  Email is changed
+if($_POST['update_researcher_email']) {
+  #  Email field is not empty
   if(!empty($_POST['new_email'])) {
     #  Email is not the same
-    if($_POST['new_email'] != $_POST['old_email']) {
+    if($_POST['new_email'] != $_SESSION['id']) {
       #  Check if new email is not taken
       $checkReseacher = new Researcher($mysqli, $_POST['new_email']);
       if(!$checkReseacher->getResearcher()) {
         # Update email
-        $reseacher->updateResearcher($_POST['new_email']);
-        $msg = "Email updated.";
+        if($researcher->updateResearcher($_POST['new_email'])) {
+          $_SESSION['id'] = $_POST['new_email'];
+          $msg = "Email updated.";
+        } else {
+          $msg = "Database error: email.";
+        }
       } else {
-        $msg = "The new email is already in use. Please choose another one.";
+        $msg = "That email is already in use. Please choose another one.";
       }
+    } else {
+      $msg = "Your email was not updated.";
     }
   }
+  $page = "profile";
+  $edit = true;
+}
+
+if($_POST['change_researcher_password']) {
   #  Password fields are all filled
   if(!empty($_POST['old_password']) && !empty($_POST['new_password']) && !empty($_POST['confirm_new_password'])) {
     # Check that new password and confirm new password match
@@ -86,16 +91,32 @@ if($_POST['update_researcher']) {
       # Check that old password matches current password
       if(password_verify($_POST['old_password'], $this->getPasswordHash())) {
         # update password
-        $reseacher->updateResearcher("", password_hash($_POST['new_password'], PASSWORD_DEFAULT));
-        $msg = "Password updated.";
+        if($reseacher->updateResearcher("", $_POST['new_password'])) {
+          $msg = "Password changed.";
+        } else {
+          $msg = "Database error: password.";
+        }
       } else {
-        $msg = $msg."<br>\nThe current password you gave doesn't match the database.";
+        $msg = "The current password you gave doesn't match the database.";
       }
     } else {
-      $msg = $msg."<br>\nThe new password and confirm new password do not match.";
+      $msg = "The new password and confirm new password do not match.";
     }
   }
-  $researcher->updateResearcher("", "", $_POST['new_first_name'], $_POST['new_last_name'], $_POST['new_phone']);
+  $page = "profile";
+  $edit = true;
+}
+
+if($_POST['update_researcher_profile']) {
+  if(!empty($_POST['new_first_name']) && !empty($_POST['new_last_name'])) {
+    if($researcher->updateResearcher("", "", $_POST['new_first_name'], $_POST['new_last_name'], $_POST['new_phone'])) {
+      $msg = "Profile updated.";
+    } else {
+      $msg = "Database error: profile.";
+    }
+  }
+  $page = "profile";
+  $edit = true;
 }
 
 if($_POST['cancel']) {

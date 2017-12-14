@@ -43,26 +43,85 @@ if(isset($_POST['bid_paper'])) {
 }
 
 if($_POST['submit_review']) {
-  $page = "review";
-  $title = $_POST['title'];
   if(!empty($_POST['score'])) {
-    if(isset($_POST['is_recommended']) && $_POST['is_recommended'] == "1") {
-      $recommend = 1;
-    } else {
-      $recommend = 0;
-    }
-    echo $_POST['score']." ".$recommend." ".time();
-    $review = new Review($mysqli, $title, $_SESSION['id']);
+    #$recommend = ($_POST['is_recommended'] ? 1 : 0);
+    #echo $_POST['score']." ".$recommend." ".time();
+    $review = new Review($mysqli, $_POST['title'], $_SESSION['id']);
     $review->getReview();
-    if($review->updateReview($_POST['score'], $recommend, time())) {
-      $msg = "Review Submitted!";
+    $result = $review->updateReview($_POST['score'], ($_POST['is_recommended'] ? "1" : "0"));
+    if($result[0]) {
+      $msg = "Review Submitted! ".$result[1];
     } else {
-      $msg = "Database error!";
+      $msg = "Database error! ".$result[1];
     }
   } else {
     $error = true;
     $msg = "Please enter a score before submitted a review.";
   }
+  $page = "bids";
+  $title = $_POST['title'];
+}
+
+if($_POST['update_reviewer_email']) {
+  #  Email field is not empty
+  if(!empty($_POST['new_email'])) {
+    #  Email is not the same
+    if($_POST['new_email'] != $_SESSION['id']) {
+      #  Check if new email is not taken
+      $checkReviewer = new Reviewer($mysqli, $_POST['new_email']);
+      if(!$checkReviewer->getReviewer()) {
+        # Update email
+        if($reviewer->updateReviewer($_POST['new_email'])) {
+          $_SESSION['id'] = $_POST['new_email'];
+          $msg = "Email updated.";
+        } else {
+          $msg = "Database error: email.";
+        }
+      } else {
+        $msg = "That email is already in use. Please choose another one.";
+      }
+    } else {
+      $msg = "Your email was not updated.";
+    }
+  }
+  $page = "profile";
+  $edit = true;
+}
+
+if($_POST['change_reviewer_password']) {
+  #  Password fields are all filled
+  if(!empty($_POST['old_password']) && !empty($_POST['new_password']) && !empty($_POST['confirm_new_password'])) {
+    # Check that new password and confirm new password match
+    if($_POST['new_password'] == $_POST['confirm_new_password']) {
+      # Check that old password matches current password
+      if(password_verify($_POST['old_password'], $this->getPasswordHash())) {
+        # update password
+        if($reviewer->updateReviewer("", $_POST['new_password'])) {
+          $msg = "Password changed.";
+        } else {
+          $msg = "Database error: password.";
+        }
+      } else {
+        $msg = "The current password you gave doesn't match the database.";
+      }
+    } else {
+      $msg = "The new password and confirm new password do not match.";
+    }
+  }
+  $page = "profile";
+  $edit = true;
+}
+
+if($_POST['update_reviewer_profile']) {
+  if(!empty($_POST['new_first_name']) && !empty($_POST['new_last_name'])) {
+    if($reviewer->updateReviewer("", "", $_POST['new_first_name'], $_POST['new_last_name'], $_POST['new_phone'])) {
+      $msg = "Profile updated.";
+    } else {
+      $msg = "Database error: profile.";
+    }
+  }
+  $page = "profile";
+  $edit = true;
 }
 
 if($_POST['cancel']) {
@@ -101,6 +160,7 @@ if($_POST['cancel']) {
     <div id="nav">
       <a href="index.php?page=index">Papers</a>
       <a href="index.php?page=bids">Reviews</a>
+      <a href="index.php?page=profile">Profile</a>
       <a href="index.php?page=logout">Logout</a>
     </div>
     <div id="content">

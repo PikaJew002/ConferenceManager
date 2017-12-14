@@ -12,10 +12,10 @@
             <form action="index.php" method="post">
             <td>
               Email: <br>
-              <input type="text" name="new_email" size="30" maxlength="255" value="<?php echo ($_POST['update_admin_email'] ? $_POST['new_email'] : $admin->getEmail()); ?>"><br>
+              <input type="text" name="new_email" size="30" maxlength="255" value="<?php echo ($_POST['update_reviewer_email'] ? $_POST['new_email'] : $reviewer->getEmail()); ?>"><br>
             </td>
             <td style="vertical-align: bottom;">
-              <input type="submit" name="update_admin_email" value="Update Email">
+              <input type="submit" name="update_reviewer_email" value="Update Email">
             </td>
             </form>
           </tr>
@@ -30,7 +30,7 @@
                 <input type="password" name="confirm_new_password" size="30" maxlength="30"><br>
             </td>
             <td style="vertical-align: bottom;">
-              <input type="submit" name="change_admin_password" value="Change Password">
+              <input type="submit" name="change_reviewer_password" value="Change Password">
             </td>
             </form>
           </tr>
@@ -38,12 +38,14 @@
             <form action="index.php" method="post">
             <td>
               First Name: <br>
-                <input type="text" name="new_first_name" size="30" maxlength="50" value="<?php echo ($_POST['update_admin_profile'] ? $_POST['new_first_name'] : $admin->getFirstName()); ?>"><br>
+                <input type="text" name="new_first_name" size="30" maxlength="50" value="<?php echo ($_POST['update_reviewer_profile'] ? $_POST['new_first_name'] : $reviewer->getFirstName()); ?>"><br>
               Last Name: <br>
-                <input type="text" name="new_last_name" size="30" maxlength="50" value="<?php echo ($_POST['update_admin_profile'] ? $_POST['new_last_name'] : $admin->getLastName()); ?>"><br>
+                <input type="text" name="new_last_name" size="30" maxlength="50" value="<?php echo ($_POST['update_reviewer_profile'] ? $_POST['new_last_name'] : $reviewer->getLastName()); ?>"><br>
+              Phone: <br>
+                <input type="text" name="new_phone" size="30" maxlength="11" value="<?php echo ($_POST['update_reviewer_profile'] ? $_POST['new_phone'] : $reviewer->getPhone()); ?>">
             </td>
             <td style="vertical-align: bottom;">
-              <input type="submit" name="update_admin_profile" value="Update Profile">
+              <input type="submit" name="update_reviewer_profile" value="Update Profile">
             </td>
             </form>
           </tr>
@@ -52,11 +54,15 @@
       <?php } else {
       /* execute/echo the following block if the researchers profile is not being edited */ ?>
       Email: <br>
-        <span style="background-color: white; padding: 1px;"><?php echo $admin->getEmail(); ?></span><br>
+        <span style="background-color: white; padding: 1px;"><?php echo $reviewer->getEmail(); ?></span><br>
       First Name: <br>
-        <span style="background-color: white; padding: 1px;"><?php echo $admin->getFirstName(); ?></span><br>
+        <span style="background-color: white; padding: 1px;"><?php echo $reviewer->getFirstName(); ?></span><br>
       Last Name: <br>
-        <span style="background-color: white; padding: 1px;"><?php echo $admin->getLastName(); ?></span><br>
+        <span style="background-color: white; padding: 1px;"><?php echo $reviewer->getLastName(); ?></span><br>
+      <?php if(!empty($reviewer->getPhone())) { ?>
+      Phone: <br>
+        <span style="background-color: white; padding: 1px;"><?php echo $reviewer->getPhone(); ?></span><br>
+      <?php } ?>
         <?php echo $msg; ?>
       <?php } ?>
     </p>

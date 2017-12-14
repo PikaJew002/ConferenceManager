@@ -49,8 +49,48 @@ class Reviewer {
     }
   }
 
+  public function updateReviewer($email = "", $password = "", $firstName = "", $lastName = "", $phone = "") {
+    if(!empty($email)) {
+      $newEmail = $this->mysqli->real_escape_string($email);
+      if($this->mysqli->query("UPDATE reviewers SET email='{$newEmail}' WHERE email='{$this->email}'")) {
+        # INSERT query successful
+        return true;
+      } else { #  INSERT query failed
+        return false;
+      }
+    } else if(!empty($password)) {
+      $newPassword = password_hash($password, PASSWORD_DEFAULT);
+      if($this->mysqli->query("UPDATE reviewers SET password='{$newPassword}' WHERE email='{$this->email}'")) {
+        # INSERT query successful
+        return true;
+      } else { #  INSERT query failed
+        return false;
+      }
+    } else if(!empty($firstName) && !empty($lastName)) {
+      $newFirstName = $this->mysqli->real_escape_string($firstName);
+      $newLastName = $this->mysqli->real_escape_string($lastName);
+      $newPhone = $this->mysqli->real_escape_string($phone);
+      if($this->mysqli->query("UPDATE reviewers SET first_name='{$newFirstName}', last_name='{$newLastName}', phone='{$newPhone}' WHERE email='{$this->email}'")) {
+        # INSERT query successful
+        return true;
+      } else { #  INSERT query failed
+        return false;
+      }
+    }
+    $this->getResearcher();
+  }
+
   public function authenticate() {
 
+  }
+
+  public function getEmail() {
+    return $this->email;
+  }
+
+  public function getPasswordHash() {
+    $result = $this->mysqli->query("SELECT password FROM reviewers WHERE email='{$this->email}'");
+    return $result->fetch_assoc()['password'];
   }
 
   public function getConfName() {
@@ -63,6 +103,14 @@ class Reviewer {
 
   public function getFirstName() {
     return $this->firstName;
+  }
+
+  public function getLastName() {
+    return $this->lastName;
+  }
+
+  public function getPhone() {
+    return $this->phone;
   }
 }
 ?>

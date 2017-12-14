@@ -60,8 +60,7 @@ class Researcher {
       } else { #  INSERT query failed
         return false;
       }
-    }
-    if(!empty($password)) {
+    } else if(!empty($password)) {
       $newPassword = password_hash($password, PASSWORD_DEFAULT);
       if($this->mysqli->query("UPDATE researchers SET password='{$newPassword}' WHERE email='{$this->email}'")) {
         # INSERT query successful
@@ -69,15 +68,16 @@ class Researcher {
       } else { #  INSERT query failed
         return false;
       }
-    }
-    $newFirstName = $this->mysqli->real_escape_string($firstName);
-    $newLastName = $this->mysqli->real_escape_string($lastName);
-    $newPhone = $this->mysqli->real_escape_string($phone);
-    if($this->mysqli->query("UPDATE researchers SET first_name='{$newFirstName}', last_name='{$newLastName}', phone='{$newPhone}' WHERE email='{$this->email}'")) {
-      # INSERT query successful
-      return true;
-    } else { #  INSERT query failed
-      return false;
+    } else if(!empty($firstName) && !empty($lastName)) {
+      $newFirstName = $this->mysqli->real_escape_string($firstName);
+      $newLastName = $this->mysqli->real_escape_string($lastName);
+      $newPhone = $this->mysqli->real_escape_string($phone);
+      if($this->mysqli->query("UPDATE researchers SET first_name='{$newFirstName}', last_name='{$newLastName}', phone='{$newPhone}' WHERE email='{$this->email}'")) {
+        # INSERT query successful
+        return true;
+      } else { #  INSERT query failed
+        return false;
+      }
     }
     $this->getResearcher();
   }
@@ -121,6 +121,10 @@ class Researcher {
 
   public function getLastName() {
     return $this->lastName;
+  }
+
+  public function getPhone() {
+    return $this->phone;
   }
 }
 ?>

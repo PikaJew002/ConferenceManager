@@ -54,13 +54,18 @@ class Review {
     }
   }
 
-  public function updateReview($score, $recommendation, $whenSubmitted) {
-    if($result = $this->mysqli->query("UPDATE reviews SET score = '{$score}', is_recommended = '{$recommendation}' WHERE paper_title='{$this->paperTitle}' AND reviewer_email='{$this->reviewerEmail}'")) {
+  public function updateReview($score, $recommendation) {
+    if($result = $this->mysqli->query("UPDATE reviews SET score='{$score}', is_recommended='{$recommendation}' WHERE paper_title='{$this->paperTitle}' AND reviewer_email='{$this->reviewerEmail}'")) {
       $this->getReview();
-      return true;
+      #echo $recommendation;
+      return array(true, "Rec: ".$recommendation." Score: ".$score." Error: ".$this->mysqli->error." Rows: ".$this->mysqli->affected_rows." : "."UPDATE reviews SET score='{$score}', is_recommended='{$recommendation}' WHERE paper_title='{$this->paperTitle}' AND reviewer_email='{$this->reviewerEmail}'");
     } else {
-      return false;
+      return array(false, "Rec: ".$recommendation." Score: ".$score." Error: ".$this->mysqli->error." Rows: ".$this->mysqli->affected_rows);
     }
+  }
+
+  public function getPaperTitle() {
+    return $this->paperTitle;
   }
 
   public function getWhenBidded() {

@@ -25,24 +25,16 @@ foreach ($researchers as $researcher) {
     $paperObj->getPaper();
     $paperObj->getReviews();
     $reviews = $paperObj->returnReviews();
-    $showPaper = true;
-    foreach($reviews as $review) {
-      if($review['reviewer_email'] == $_SESSION['id']) {
-        $showPaper = false;
-      }
-    }
 
     $reviewNum = count($reviews);
-    if($showPaper) {
 ?>
         <tr>
           <td><?php echo ($reviewNum < 3 ? "Yes" : "No"); ?></td>
-          <td><a href="index.php?page=paper&title=<?php echo $paper['title']; ?>" id="paper_<?php echo $key; ?>" title="<?php echo "../".$paper['path']; ?>"><?php echo substr($paper['title'], 0, 50)." . . ."; ?></a></td>
+          <td><a href="index.php?page=paper&title=<?php echo $paper['title']; ?>" id="paper_<?php echo $key; ?>" title="<?php echo $paper['title']; ?>"><?php echo substr($paper['title'], 0, 50)." . . ."; ?></a></td>
           <td><?php echo ($paper['is_accepted'] == null ? "Pending" : ($paper['is_accepted'] == 0 ? "No" : "Yes" )); ?></td>
           <td><?php echo $paper['when_submitted']."\n"; ?></td>
         </tr>
 <?php
-    }
   }
 }
 ?>

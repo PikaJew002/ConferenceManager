@@ -1,43 +1,38 @@
 <?php
-if(!$error) {
-  if($_GET['title']) {
-    $paperTitle = $_GET['title'];
-  } else {
-    $paperTitle = $title;
-  }
-} else {
-  if(isset($title)) {
-    $paperTitle = $title;
-  } else {
-
-  }
+if($_GET['title']) {
+  $title = $_GET['title'];
 }
-$paper = new Paper($mysqli, $paperTitle);
+$paper = new Paper($mysqli, $title);
 $paper->getPaper();
 $paper->getReviews();
 $reviews = $paper->returnReviews();
-$review = new Review($mysqli, $paperTitle, $_SESSION['id']);
+$review = new Review($mysqli, $title, $_SESSION['id']);
 $review->getReview();
 $researcher = new Researcher($mysqli, $paper->getResearcherEmail());
 $researcher->getResearcher();
 ?>
     <div id="content_view_panel">
-      <div id="pdf_container" style="float: left; padding: 10px; width: 620px;">
-        <h2 style="text-align: center;"><?php echo $paperTitle; ?></h2>
-        <embed id="paper_pdf" src="<?php echo "../papers/".md5($paperTitle).".pdf"; ?>" width="600" height="500" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
+      <div id="paper_title" style="padding: 10px; width: 100%;">
+        <h1><?php echo $title; ?></h1>
       </div>
-      <div id="abstract_container" style="float: left; padding: 10px;">
-        <b>Abstract:</b> <br>
-        <p style="padding-left: 10px;">
-          <?php echo $paper->getAbstract(); ?>
-        </p>
-        <b>Author info:</b> <br>
+      <div id="pdf_container" style="float: left; padding: 10px; width: 620px;">
+        <h3>PDF</h3>
+        <embed id="paper_pdf" src="<?php echo "../papers/".md5($title).".pdf"; ?>" width="600" height="500" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
+      </div>
+      <div id="abstract_container" style="float: left; padding: 10px; width: 500px;">
+        <h3>Details</h3>
+        <u>Author info:</u><br>
         <p style="padding-left: 10px;">
           Name: <em><?php echo $researcher->getLastName().", ".$researcher->getFirstName(); ?></em><br>
           Email: <em><?php echo $researcher->getEmail(); ?></em><br>
         </p>
+        <u>Abstract:</u><br>
+        <p style="padding-left: 10px;">
+          <?php echo $paper->getAbstract(); ?>
+        </p>
       </div>
       <div id="paper_reviews" style="float: left; padding: 10px;">
+        <h3>Review</h3>
         <form action="index.php" method="post">
           <input type="hidden" name="title" value="<?php echo $paper->getTitle(); ?>">
           Score: <br>

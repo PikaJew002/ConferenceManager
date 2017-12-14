@@ -8,17 +8,15 @@
             <th>Date Time Submitted</th>
           </tr>
 <?php
-$result = $mysqli->query("SELECT * FROM papers WHERE conf_name='{$conf['name']}'");
-while($row = $result->fetch_assoc()) {
-  $author = $mysqli->query("SELECT * FROM researchers WHERE conf_name='{$conf['name']}' AND email='{$row['author']}'")->fetch_assoc();
+
 ?>
           <tr>
-            <td><button type="button" id="paper_link" onclick="getPaperInfo()">View Paper</button><p id="paper_abstract" hidden><?php echo $row['abstract']; ?></p></td>
-            <td><a id="paper_a" title="<?php echo $row['path']; ?>"><?php echo substr($row['title'], 0, 50)." . . ."; ?></a></td>
-            <td><a id=""><?php echo $author['last_name'].", ".$author['first_name']."\n"; ?></a></td>
-            <td><?php echo $row['datetime_submitted']."\n"; ?></td>
+            <td><button type="button" id="paper_link" onclick="getPaperInfo()">View Paper</button><p id="paper_abstract" hidden><?php  ?></p></td>
+            <td><a id="paper_a" title="<?php  ?>"><?php  ?></a></td>
+            <td><a id=""><?php ?></a></td>
+            <td><?php ?></td>
           </tr>
-<?php } ?>
+<?php ?>
         </table>
       </div>
       <div id="content_view_panel" hidden>
