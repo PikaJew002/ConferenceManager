@@ -9,7 +9,6 @@ if($result->num_rows >= 1) {
   }
 }
 ?>
-        <a href="?content=create">Create Conference</a>
       </div>
       <div id="info">
 <?php if($content && $content == "create" ) { ?>

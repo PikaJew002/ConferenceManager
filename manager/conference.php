@@ -11,10 +11,14 @@ require("../classes/Card.php");
 require("../classes/Conference.php");
 require("../classes/Researcher.php");
 require("../classes/Reviewer.php");
+require("../classes/Paper.php");
 
-$userData = $mysqli->query("SELECT * FROM admin_users WHERE email=\"".$_SESSION['id']."\"")->fetch_assoc(); # get admin user data from session
+$admin =  new Admin($mysqli, $_SESSION['id']);
+$admin->getAdmin();# get admin user data from session
+
 if($_GET['name']) {
-  $conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_GET['name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
+  $conf = new Conference($mysqli, $_GET['name']);
+  $conf->getConference();
 }
 if($_GET['page']) {
   $page = $_GET['page']; # get page to include from URL
@@ -91,16 +95,16 @@ if($_POST['cancel']) {
 <body>
 <div id="main">
   <div id="header">
-    <h1><?php echo $conf['name']; ?></h1>
+    <h1><?php echo $conf->getName(); ?></h1>
     <p>
-      <em>Hello, <?php echo $userData['first_name']; ?>.</em>
+      <em>Hello, <?php echo $admin->getFirstName(); ?>.</em>
     </p>
   </div>
   <div id="body">
     <div id="nav">
-      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=index">Overview</a>
-      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=papers">Papers Submitted</a>
-      <a href="conference.php?name=<?php echo $conf['name']; ?>&page=reviewers">Paper Reviewers</a>
+      <a href="conference.php?name=<?php echo $conf->getName(); ?>&page=index">Overview</a>
+      <a href="conference.php?name=<?php echo $conf->getName(); ?>&page=papers">Papers Submitted</a>
+      <a href="conference.php?name=<?php echo $conf->getName(); ?>&page=reviewers">Paper Reviewers</a>
       <a href="index.php">Back to Conferences</a>
     </div>
     <div id="content">

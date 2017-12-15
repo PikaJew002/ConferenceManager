@@ -16,6 +16,7 @@ class Paper {
     $this->researcherEmail = $this->mysqli->real_escape_string($researcherEmail);
     $this->abstract = $this->mysqli->real_escape_string($abstract);
     $this->path = $path;
+    $this->whenSubmitted = $whenSubmitted;
     $this->isAccepted = $isAccepted;
     $this->reviews = array();
   }
@@ -27,6 +28,7 @@ class Paper {
       $this->researcherEmail = $paper['researcher_email'];
       $this->abstract = $paper['abstract'];
       $this->path = $paper['path'];
+      $this->whenSubmitted = $paper['when_submitted'];
       $this->isAccepted = $paper['is_accepted'];
       return true;
     } else {
@@ -53,6 +55,10 @@ class Paper {
 
   public function getResearcherEmail() {
     return $this->researcherEmail;
+  }
+
+  public function getWhenSubmitted() {
+    return $this->whenSubmitted;
   }
 
   public function getIsAccepted() {

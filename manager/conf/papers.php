@@ -2,21 +2,31 @@
       <div id="content_panel">
         <table>
           <tr>
-            <th></th>
+            <th>Accepted</th>
             <th>Title</th>
             <th>Author</th>
             <th>Date Time Submitted</th>
           </tr>
 <?php
-
+$conf->getResearchers();
+foreach($conf->returnResearchers() as $researcher) {
+  $researcherObj = new Researcher($mysqli, $researcher['email']);
+  $researcherObj->getResearcher();
+  $researcherObj->getPapers();
+  foreach($researcherObj->returnPapers() as $paper) {
+    $paperObj = new Paper($mysqli, $paper['title']);
+    $paperObj->getPaper();
 ?>
           <tr>
-            <td><button type="button" id="paper_link" onclick="getPaperInfo()">View Paper</button><p id="paper_abstract" hidden><?php  ?></p></td>
-            <td><a id="paper_a" title="<?php  ?>"><?php  ?></a></td>
-            <td><a id=""><?php ?></a></td>
-            <td><?php ?></td>
+            <td><?php echo ($paperObj->getIsAccepted() == null ? "Pending" : ($paperObj->getIsAccepted() == 0 ? "Denied" : "Accepted")); ?></td>
+            <td><a href="index.php?page=paper&title=<?php echo $paperObj->getTitle(); ?>" id="paper_a" title="<?php echo $paperObj->getTitle(); ?>"><?php echo substr($paperObj->getTitle(), 0, 50)." . . ."; ?></a></td>
+            <td><?php echo $researcherObj->getLastName().", ".$researcherObj->getFirstName(); ?></td>
+            <td><?php echo $paperObj->getWhenSubmitted(); ?></td>
           </tr>
-<?php ?>
+<?php
+  }
+}
+?>
         </table>
       </div>
       <div id="content_view_panel" hidden>

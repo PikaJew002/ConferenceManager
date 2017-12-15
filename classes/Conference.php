@@ -49,10 +49,6 @@ class Conference {
     return $this->researchers;
   }
 
-  public function editConference() {
-
-  }
-
   public function getName() {
     return $this->name;
   }
