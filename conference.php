@@ -131,6 +131,29 @@ if($_POST['register_reviewer']) {
   $conf = new Conference($mysqli, $_POST['conf_name']);
   $conf->getConference();
 }
+
+if($_POST['checkin_attendee']) {
+  # check for empty fields
+  if(!empty($_POST['email']) && !empty($_POST['first_name']) && !empty($_POST['last_name'])) {
+    $attendee = new Attendee($mysqli, $_POST['email'], $_POST['first_name'], $_POST['last_name'], $_POST['conf_name']);
+    # check if attendee exists
+    if($attendee->getAttendee()) {
+      # update attendee in the database
+      if($attendee->updateAttendee("", "", "", 1)) {
+        $registered = true;
+      } else {
+        $msg = "Database error when adding the attendee";
+      }
+    } else {
+      $msg = "An attendee with that email, first name, and last name does not exist. Please register for the conference before checking in.";
+    }
+  } else {
+    $msg = "You have empty fields. Make sure all fields are filled in!";
+  }
+  $page = "checkin";
+  $conf = new Conference($mysqli, $_POST['conf_name']);
+  $conf->getConference();
+}
 ?>
 <!DOCTYPE html>
 <html>

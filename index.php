@@ -32,7 +32,7 @@ if($_POST['login']) {
             $_SESSION['id'] = $user->getEmail();
             header("Location: reviewer/index.php");
           } else {
-            header("Location index.php?login&error_msg=not_auth");
+            header("Location: index.php?page=login&error_msg=not_auth");
           }
         } else { # (else) if researcher, login successful
           $_SESSION['id'] = $user->getEmail();

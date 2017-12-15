@@ -12,6 +12,7 @@ require("../classes/Conference.php");
 require("../classes/Researcher.php");
 require("../classes/Reviewer.php");
 require("../classes/Paper.php");
+require("../classes/Review.php");
 
 $admin =  new Admin($mysqli, $_SESSION['id']);
 $admin->getAdmin();# get admin user data from session
@@ -19,9 +20,14 @@ $admin->getAdmin();# get admin user data from session
 if($_GET['name']) {
   $conf = new Conference($mysqli, $_GET['name']);
   $conf->getConference();
+} else if($_POST['name']) {
+  $conf = new Conference($mysqli, $_POST['name']);
+  $conf->getConference();
 }
 if($_GET['page']) {
   $page = $_GET['page']; # get page to include from URL
+} else if($_POST['page']) {
+  $page = $_POST['page']; # get page to include from form submission
 }
 if($_GET['edit']) {
   $edit = $_GET['edit']; # is the conference being edited?
@@ -66,6 +72,26 @@ if($_POST['edit_conference']) {
   $page = "index";
   $conf = $mysqli->query("SELECT * FROM conferences WHERE name=\"".$mysqli->real_escape_string($_POST['old_name'])."\"")->fetch_assoc(); # get conference data from database from URL conference name
   $edit = "true";
+}
+
+if($_POST['accept_paper']) {
+  $paper = new Paper($mysqli, $_POST['title']);
+  $paper->getPaper();
+  if($paper->updatePaper("", "", "", (isset($_POST['is_accepted']) ? 1 : 0))) {
+    $msg = "Paper acceptance choice has been saved.";
+  } else {
+    $msg = "Datebase error: update paper.";
+  }
+}
+
+if($_POST['authenticate_reviewer']) {
+  $reviewer = new Reviewer($mysqli, $_POST['email']);
+  $reviewer->getReviewer();
+  if($reviewer->updateReviewer("", "", "", "", "", 1)) {
+    $msg = "Reviwer authenticated.";
+  } else {
+    $msg = "Database error: update reviwer, authentication.";
+  }
 }
 
 if($_POST['cancel']) {

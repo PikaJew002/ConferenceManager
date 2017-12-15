@@ -48,11 +48,10 @@ if($_POST['submit_review']) {
     #echo $_POST['score']." ".$recommend." ".time();
     $review = new Review($mysqli, $_POST['title'], $_SESSION['id']);
     $review->getReview();
-    $result = $review->updateReview($_POST['score'], ($_POST['is_recommended'] ? "1" : "0"));
-    if($result[0]) {
-      $msg = "Review Submitted! ".$result[1];
+    if($result = $review->updateReview($_POST['score'], ($_POST['is_recommended'] ? "1" : "0"))) {
+      $msg = "Review Submitted! ";
     } else {
-      $msg = "Database error! ".$result[1];
+      $msg = "Database error! ";
     }
   } else {
     $error = true;

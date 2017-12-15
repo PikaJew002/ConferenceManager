@@ -35,12 +35,16 @@ $researcher->getResearcher();
           <input type="hidden" name="title" value="<?php echo $paper->getTitle(); ?>">
 <?php
 $bidable = true;
+$completedReviews = 0;
 foreach($reviews as $review) {
   if($review['reviewer_email'] == $_SESSION['id']) {
     $bidable = false;
   }
+  if(!empty($review['score'])) {
+    $completedReviews = $completedReviews + 1;
+  }
 }
-if(count($reviews) < 3) {
+if($completedReviews < 3) {
   if(!$bidable) { ?>
     You already bid on/reviewed this paper.<br>
     You can complete or view your review <a href="index.php?page=review&title=<?php echo $paperTitle; ?>">here</a><br>

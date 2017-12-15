@@ -43,16 +43,27 @@ class Attendee {
     }
   }
 
+  public function updateAttendee($email = "", $firstName = "", $lastName = "", $isCheckedIn = 0) {
+    if(!empty($email)) {
+      # Editing the email is not allowed in this version. May be implemented in future versions
+    } else if(!empty($firstName) && !empty($lastName)) {
+      # Editing the first and/or last name is not allowed in this version. May be implemented in future versions
+    } else if($isCheckedIn == 1) {
+      if($result = $this->mysqli->query("UPDATE attendees SET is_checked_in='{$isCheckedIn}' WHERE email='{$this->email}' AND first_name='{$this->firstName}' AND last_name='{$this->lastName}'")) {
+        $this->getAttendee();
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
   public function isCheckedIn() {
     if($this->isCheckedIn == 0) {
       return false;
     } else {
       return true;
     }
-  }
-
-  public function checkIn() {
-
   }
 }
 ?>

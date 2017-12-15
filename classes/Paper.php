@@ -10,7 +10,7 @@ class Paper {
   private $isAccepted;
   private $reviews;
 
-  public function __construct($mysqli, $title, $researcherEmail = "", $abstract = "", $path = "", $whenSubmitted = "", $isAccepted = 0) {
+  public function __construct($mysqli, $title, $researcherEmail = "", $abstract = "", $path = "", $whenSubmitted = "", $isAccepted = null) {
     $this->mysqli = $mysqli;
     $this->title = $this->mysqli->real_escape_string($title);
     $this->researcherEmail = $this->mysqli->real_escape_string($researcherEmail);
@@ -42,6 +42,22 @@ class Paper {
       return true;
     } else { #  INSERT query failed
       return false;
+    }
+  }
+
+  public function updatePaper($title = "", $researcherEmail = "", $abstract = "", $isAccepted = null) {
+    if(!empty($title)) {
+      # Editing the title is not allowed in this version. May be implemented in future versions
+    } else if(!empty($researcherEmail)) {
+      # Editing the researcher email is not allowed in this version. May be implemented in future versions
+    } else if(!empty($abstract)) {
+      # Editing the abstract is not allowed in this version. May be implemented in future versions
+    } else if($isAccepted != null) {
+      if($result = $this->mysqli->query("UPDATE papers SET is_accepted='{$isAccepted}' WHERE title='{$this->title}'")) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 

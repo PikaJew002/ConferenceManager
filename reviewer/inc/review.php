@@ -54,7 +54,13 @@ $researcher->getResearcher();
 
           } ?>
         <?php
-        if(count($reviews) < 3 && $review->getScore() == null) {
+        $completedReviews = 0;
+        foreach($reviews as $reviewArray) {
+          if(!empty($reviewArray['score'])) {
+            $completedReviews = $completedReviews + 1;
+          }
+        }
+        if($completedReviews < 3 && $review->getScore() == null) {
           ?>
           <input type="submit" name="submit_review" value="Submit Review"><br>
         <?php

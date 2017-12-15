@@ -8,6 +8,7 @@ class Conference {
   private $startDate;
   private $endDate;
   private $researchers;
+  private $reviewers;
 
   public function __construct($mysqli, $name, $admin = "", $location = "", $startDate = "", $endDate = "") {
     $this->mysqli = $mysqli;
@@ -17,6 +18,7 @@ class Conference {
     $this->startDate = $startDate;
     $this->endDate = $endDate;
     $this->researchers = array();
+    $this->reviewers = array();
   }
 
   public function getConference() {
@@ -47,6 +49,22 @@ class Conference {
 
   public function returnResearchers() {
     return $this->researchers;
+  }
+
+  public function getReviewers() {
+    $result = $this->mysqli->query("SELECT * FROM reviewers WHERE conf_name='{$this->name}'");
+    if($result->num_rows > 0) {
+      while($reviewer = $result->fetch_assoc()) {
+        $this->reviewers[] = $reviewer;
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public function returnReviewers() {
+    return $this->reviewers;
   }
 
   public function getName() {

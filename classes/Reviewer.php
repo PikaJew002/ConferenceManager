@@ -49,7 +49,7 @@ class Reviewer {
     }
   }
 
-  public function updateReviewer($email = "", $password = "", $firstName = "", $lastName = "", $phone = "") {
+  public function updateReviewer($email = "", $password = "", $firstName = "", $lastName = "", $phone = "", $isAuth = 0) {
     if(!empty($email)) {
       $newEmail = $this->mysqli->real_escape_string($email);
       if($this->mysqli->query("UPDATE reviewers SET email='{$newEmail}' WHERE email='{$this->email}'")) {
@@ -76,12 +76,15 @@ class Reviewer {
       } else { #  INSERT query failed
         return false;
       }
+    } else if($isAuth == 1) {
+      if($this->mysqli->query("UPDATE reviewers SET is_auth='{$isAuth}' WHERE email='{$this->email}'")) {
+        # INSERT query successful
+        return true;
+      } else { #  INSERT query failed
+        return false;
+      }
     }
     $this->getResearcher();
-  }
-
-  public function authenticate() {
-
   }
 
   public function getEmail() {
