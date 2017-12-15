@@ -67,9 +67,11 @@ $reviewCount = $reviewCount + 1;
           <input type="hidden" name="name" value="<?php echo $conf->getName(); ?>">
           <input type="hidden" name="page" value="papers">
           <input type="hidden" name="title" value="<?php echo $paper->getTitle(); ?>">
-<?php if($reviewCount == 3) { ?>
+<?php if($reviewCount == 3 && $paper->getIsAccepted() == null) { ?>
           Accept: <input type="checkbox" name="is_accepted" value="1"><br>
           <input type="submit" name="accept_paper" value="Submit Acceptance Choice">
+<?php } else { ?>
+          This paper has been <em><?php echo ($paper->getIsAccepted() == 1 ? "accepted" : "denied"); ?></em>.<br>
 <?php } ?>
           <input type="submit" name="go_back" value="Go back">
         </form>
@@ -83,12 +85,3 @@ $reviewCount = $reviewCount + 1;
 <?php } ?>
       </div>
     </div>
-
-<?php    /*
-Amide bond formation is a fundamentally important reaction in organic synthesis, and is
-typically mediated by one of a myriad of so-called coupling reagents. This critical review is
-focussed on the most recently developed coupling reagents with particular attention paid to the
-pros and cons of the plethora of ‘‘acronym’’ based reagents. It aims to demystify the process
-allowing the chemist to make a sensible and educated choice when carrying out an amide
-coupling reaction (179 references)
-    */?>
